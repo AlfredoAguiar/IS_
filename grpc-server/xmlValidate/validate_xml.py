@@ -1,13 +1,13 @@
 from lxml import etree
+import os
 
-
-def validate_xml():
+def validate_xml(file_p):
     try:
 
-        with open("../dt/car_prices_cord.xml", "r") as file:
+        with open(file_p, "r") as file:
             xml_doc = etree.parse(file)
 
-        schema_path = "schema.xsd"
+        schema_path = os.path.join(os.path.dirname(__file__), "schemas", "schema.xsd")
 
         with open(schema_path, "r") as schema_file:
             xml_schema_doc = etree.parse(schema_file)
@@ -26,5 +26,4 @@ def validate_xml():
         return f"An error occurred: {e}"
 
 
-result = validate_xml()
-print(result)
+

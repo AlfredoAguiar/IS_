@@ -60,40 +60,6 @@ services:
       - app-network
 
   # RabbitMQ Server
-  rabbitmq:
-    image: rabbitmq:3.9-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"   # Default RabbitMQ port
-      - "15672:15672" # RabbitMQ Management Console
-    environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
-    networks:
-      - app-network
-
-  # Worker Service (for processing CSV data)
-  worker:
-    build: worker-rabbit-csv
-    container_name: worker
-    ports:
-      - "8003:8003"
-    environment:
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=user
-      - RABBITMQ_PW=password
-      - DBNAME=mydatabase
-      - DBUSERNAME=myuser
-      - DBPASSWORD=mypassword
-      - DBHOST=db
-      - DBPORT=5432
-    depends_on:
-      - rabbitmq
-      - db
-      - grpc-server
-    networks:
-      - app-network
 
   # PostgreSQL Database
   db:
