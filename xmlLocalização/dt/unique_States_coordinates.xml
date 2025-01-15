@@ -1,0 +1,523 @@
+<?xml version="1.0" ?>
+
+<States>
+
+  <State>
+
+    TN
+
+    <Coordinates>
+
+      <Latitude>35.7730076</Latitude>
+
+      <Longitude>-86.2820081</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    VA
+
+    <Coordinates>
+
+      <Latitude>37.1232245</Latitude>
+
+      <Longitude>-78.4927721</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    NJ
+
+    <Coordinates>
+
+      <Latitude>40.0757384</Latitude>
+
+      <Longitude>-74.4041622</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    WA
+
+    <Coordinates>
+
+      <Latitude>38.8950368</Latitude>
+
+      <Longitude>-77.0365427</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    MN
+
+    <Coordinates>
+
+      <Latitude>45.9896587</Latitude>
+
+      <Longitude>-94.6113288</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    ON
+
+    <Coordinates>
+
+      <Latitude>40.74507475</Latitude>
+
+      <Longitude>-73.98526465</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    OR
+
+    <Coordinates>
+
+      <Latitude>43.9792797</Latitude>
+
+      <Longitude>-120.737257</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    AZ
+
+    <Coordinates>
+
+      <Latitude>34.395342</Latitude>
+
+      <Longitude>-111.763275</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    IL
+
+    <Coordinates>
+
+      <Latitude>40.0796606</Latitude>
+
+      <Longitude>-89.4337288</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    NV
+
+    <Coordinates>
+
+      <Latitude>39.5158825</Latitude>
+
+      <Longitude>-116.853722</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    WI
+
+    <Coordinates>
+
+      <Latitude>44.4308975</Latitude>
+
+      <Longitude>-89.6884637</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    TX
+
+    <Coordinates>
+
+      <Latitude>31.2638905</Latitude>
+
+      <Longitude>-98.5456116</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    MD
+
+    <Coordinates>
+
+      <Latitude>39.5162401</Latitude>
+
+      <Longitude>-76.9382069</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    IN
+
+    <Coordinates>
+
+      <Latitude>40.3270127</Latitude>
+
+      <Longitude>-86.1746933</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    CA
+
+    <Coordinates>
+
+      <Latitude>36.7014631</Latitude>
+
+      <Longitude>-118.755997</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    NM
+
+    <Coordinates>
+
+      <Latitude>34.5802074</Latitude>
+
+      <Longitude>-105.996047</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    HI
+
+    <Coordinates>
+
+      <Latitude>19.593801499999998</Latitude>
+
+      <Longitude>-155.42837009716908</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    PR
+
+    <Coordinates>
+
+      <Latitude>18.2247706</Latitude>
+
+      <Longitude>-66.4858295</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    SC
+
+    <Coordinates>
+
+      <Latitude>33.6874388</Latitude>
+
+      <Longitude>-80.4363743</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    NE
+
+    <Coordinates>
+
+      <Latitude>41.7370229</Latitude>
+
+      <Longitude>-99.5873816</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    NC
+
+    <Coordinates>
+
+      <Latitude>35.6729639</Latitude>
+
+      <Longitude>-79.0392919</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    OK
+
+    <Coordinates>
+
+      <Latitude>34.9550817</Latitude>
+
+      <Longitude>-97.2684063</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    NS
+
+    <Coordinates>
+
+      <Latitude>38.4713429</Latitude>
+
+      <Longitude>-99.9586896</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    FL
+
+    <Coordinates>
+
+      <Latitude>27.7567667</Latitude>
+
+      <Longitude>-81.4639835</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    NY
+
+    <Coordinates>
+
+      <Latitude>40.7127281</Latitude>
+
+      <Longitude>-74.0060152</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    MI
+
+    <Coordinates>
+
+      <Latitude>43.6211955</Latitude>
+
+      <Longitude>-84.6824346</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    PA
+
+    <Coordinates>
+
+      <Latitude>40.9699889</Latitude>
+
+      <Longitude>-77.7278831</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    CO
+
+    <Coordinates>
+
+      <Latitude>38.7251776</Latitude>
+
+      <Longitude>-105.607716</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    GA
+
+    <Coordinates>
+
+      <Latitude>32.3293809</Latitude>
+
+      <Longitude>-83.1137366</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    LA
+
+    <Coordinates>
+
+      <Latitude>30.8703881</Latitude>
+
+      <Longitude>-92.007126</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    QC
+
+    <Coordinates>
+
+      <Latitude>33.256106599999995</Latitude>
+
+      <Longitude>-111.63662243523513</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    AL
+
+    <Coordinates>
+
+      <Latitude>33.2588817</Latitude>
+
+      <Longitude>-86.8295337</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    OH
+
+    <Coordinates>
+
+      <Latitude>40.2253569</Latitude>
+
+      <Longitude>-82.6881395</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    UT
+
+    <Coordinates>
+
+      <Latitude>39.4225192</Latitude>
+
+      <Longitude>-111.714358</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    MO
+
+    <Coordinates>
+
+      <Latitude>38.7604815</Latitude>
+
+      <Longitude>-92.5617875</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    MS
+
+    <Coordinates>
+
+      <Latitude>32.9715285</Latitude>
+
+      <Longitude>-89.7348497</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+  <State>
+
+    MA
+
+    <Coordinates>
+
+      <Latitude>42.3788774</Latitude>
+
+      <Longitude>-72.032366</Longitude>
+
+    </Coordinates>
+
+  </State>
+
+</States>

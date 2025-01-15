@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Root element, containing all cars -->
+  <xs:element name="Cars">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Car" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <!-- Specifications section -->
+              <xs:element name="Specifications">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Year" type="xs:gYear"/>
+                    <xs:element name="Make" type="xs:string"/>
+                    <xs:element name="Model" type="xs:string"/>
+                    <xs:element name="Trim" type="xs:string"/>
+                    <xs:element name="Body" type="xs:string"/>
+                    <xs:element name="Transmission" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+
+              <!-- Seller section -->
+              <xs:element name="Seller">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Name" type="xs:string"/>
+                    <xs:element name="State" type="xs:string"/>
+                    <xs:element name="SaleDate" type="xs:string"/>
+                    <xs:element name="SellingPrice" type="xs:decimal"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+
+              <!-- Car details -->
+              <xs:element name="VIN" type="xs:string"/>
+              <xs:element name="Condition" type="xs:int"/>
+              <xs:element name="Odometer" type="xs:int"/>
+              <xs:element name="Color" type="xs:string"/>
+              <xs:element name="Interior" type="xs:string"/>
+              <xs:element name="MMR" type="xs:int"/>
+
+              <!-- Location with Coordinates -->
+              <xs:element name="Location">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="City" type="xs:string"/>
+                    <xs:element name="Coordinates">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Latitude" type="xs:decimal"/>
+                          <xs:element name="Longitude" type="xs:decimal"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

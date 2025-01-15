@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  # gRPC Server
+  grpc-server:
+    build: grpc-server
+    container_name: grpc-server
+    ports:
+      - "50051:50051"
+    volumes:
+      - grpc-server:/app/media
+    environment:
+      - GRPC_SERVER_PORT=50051
+      - MAX_WORKERS=10
+      - MEDIA_PATH=/app/media
+      - DBNAME=mydatabase
+      - DBUSERNAME=myuser
+      - DBPASSWORD=mypassword
+      - DBHOST=db
+      - DBPORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=user
+      - RABBITMQ_PW=password
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # REST API Server
+  rest-api-server:
+    build: rest_api_server
+    container_name: rest_api_server
+    ports:
+      - "8000:8000"
+    environment:
+      - GRPC_PORT=50051
+      - GRPC_HOST=grpc-server
+      - DBNAME=mydatabase
+      - DBUSERNAME=myuser
+      - DBPASSWORD=mypassword
+      - DBHOST=db
+      - DBPORT=5432
+    depends_on:
+      - db
+      - grpc-server
+    networks:
+      - app-network
+
+  # GraphQL Server
+  graphql-server:
+    build: Is-final/test-app/graphql/graphql
+    container_name: graphql-server
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    command: ["python", "app.py"]
+    networks:
+      - app-network
+
+  # RabbitMQ Server
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # Default RabbitMQ port
+      - "15672:15672" # RabbitMQ Management Console
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app-network
+
+  # Worker Service (for processing CSV data)
+  worker:
+    build: worker-rabbit-csv
+    container_name: worker
+    ports:
+      - "8003:8003"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=user
+      - RABBITMQ_PW=password
+      - DBNAME=mydatabase
+      - DBUSERNAME=myuser
+      - DBPASSWORD=mypassword
+      - DBHOST=db
+      - DBPORT=5432
+    depends_on:
+      - rabbitmq
+      - db
+      - grpc-server
+    networks:
+      - app-network
+
+  # PostgreSQL Database
+  db:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5433:5432"   # Map PostgreSQL port on the host
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "myuser", "-d", "mydatabase"]
+      interval: 10s
+      retries: 5
+
+# Volumes for persistent storage
+volumes:
+  grpc-server:
+  pgdata:
+
+# Networks definition for better isolation
+networks:
+  app-network:
+    driver: bridge

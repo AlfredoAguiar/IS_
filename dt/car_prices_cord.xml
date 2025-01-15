@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<Cars>
+  <Car>
+    <Specifications>
+      <Year>2015</Year>
+      <Make>Kia</Make>
+      <Model>Sorento</Model>
+      <Trim>LX</Trim>
+      <Body>SUV</Body>
+      <Transmission>automatic</Transmission>
+    </Specifications>
+    <Seller>
+      <Name>kia motors america  inc</Name>
+      <State>ca</State>
+      <SaleDate>Tue Dec 16 2014 12:30:00 GMT-0800 (PST)</SaleDate>
+      <SellingPrice>21500</SellingPrice>
+    </Seller>
+    <VIN>5xyktca69fg566472</VIN>
+    <Condition>5</Condition>
+    <Odometer>16639</Odometer>
+    <Color>white</Color>
+    <Interior>black</Interior>
+    <MMR>20500</MMR>
+    <Location>
+      <City>CA</City>
+      <Coordinates>
+        <Latitude>36.7014631</Latitude>
+        <Longitude>-118.7559970</Longitude>
+      </Coordinates>
+    </Location>
+  </Car>
+  <Car>
+    <Specifications>
+      <Year>2015</Year>
+      <Make>Kia</Make>
+      <Model>Sorento</Model>
+      <Trim>LX</Trim>
+      <Body>SUV</Body>
+      <Transmission>automatic</Transmission>
+    </Specifications>
+    <Seller>
+      <Name>kia motors america  inc</Name>
+      <State>ca</State>
+      <SaleDate>Tue Dec 16 2014 12:30:00 GMT-0800 (PST)</SaleDate>
+      <SellingPrice>21500</SellingPrice>
+    </Seller>
+    <VIN>5xyktca69fg561319</VIN>
+    <Condition>5</Condition>
+    <Odometer>9393</Odometer>
+    <Color>white</Color>
+    <Interior>beige</Interior>
+    <MMR>20800</MMR>
+    <Location>
+      <City>CA</City>
+      <Coordinates>
+        <Latitude>36.7014631</Latitude>
+        <Longitude>-118.7559970</Longitude>
+      </Coordinates>
+    </Location>
+  </Car>
+  <Car>
+    <Specifications>
+      <Year>2014</Year>
+      <Make>BMW</Make>
+      <Model>3 Series</Model>
+      <Trim>328i SULEV</Trim>
+      <Body>Sedan</Body>
+      <Transmission>automatic</Transmission>
+    </Specifications>
+    <Seller>
+      <Name>financial services remarketing (lease)</Name>
+      <State>ca</State>
+      <SaleDate>Thu Jan 15 2015 04:30:00 GMT-0800 (PST)</SaleDate>
+      <SellingPrice>30000</SellingPrice>
+    </Seller>
+    <VIN>wba3c1c51ek116351</VIN>
+    <Condition>45</Condition>
+    <Odometer>1331</Odometer>
+    <Color>gray</Color>
+    <Interior>black</Interior>
+    <MMR>31900</MMR>
+    <Location>
+      <City>CA</City>
+      <Coordinates>
+        <Latitude>36.7014631</Latitude>
+        <Longitude>-118.7559970</Longitude>
+      </Coordinates>
+    </Location>
+  </Car>
+  <Car>
+    <Specifications>
+      <Year>2015</Year>
+      <Make>Volvo</Make>
+      <Model>S60</Model>
+      <Trim>T5</Trim>
+      <Body>Sedan</Body>
+      <Transmission>automatic</Transmission>
+    </Specifications>
+    <Seller>
+      <Name>volvo na rep/world omni</Name>
+      <State>ca</State>
+      <SaleDate>Thu Jan 29 2015 04:30:00 GMT-0800 (PST)</SaleDate>
+      <SellingPrice>27750</SellingPrice>
+    </Seller>
+    <VIN>yv1612tb4f1310987</VIN>
+    <Condition>41</Condition>
+    <Odometer>14282</Odometer>
+    <Color>white</Color>
+    <Interior>black</Interior>
+    <MMR>27500</MMR>
+    <Location>
+      <City>CA</City>
+      <Coordinates>
+        <Latitude>36.7014631</Latitude>
+        <Longitude>-118.7559970</Longitude>
+      </Coordinates>
+    </Location>
+  </Car>
+  <Car>
+    <Specifications>
+      <Year>2014</Year>
+      <Make>BMW</Make>
+      <Model>6 Series Gran Coupe</Model>
+      <Trim>650i</Trim>
+      <Body>Sedan</Body>
+      <Transmission>automatic</Transmission>
+    </Specifications>
+    <Seller>
+      <Name>financial services remarketing (lease)</Name>
+      <State>ca</State>
+      <SaleDate>Thu Dec 18 2014 12:30:00 GMT-0800 (PST)</SaleDate>
+      <SellingPrice>67000</SellingPrice>
+    </Seller>
+    <VIN>wba6b2c57ed129731</VIN>
+    <Condition>43</Condition>
+    <Odometer>2641</Odometer>
+    <Color>gray</Color>
+    <Interior>black</Interior>
+    <MMR>66000</MMR>
+    <Location>
+      <City>CA</City>
+      <Coordinates>
+        <Latitude>36.7014631</Latitude>
+        <Longitude>-118.7559970</Longitude>
+      </Coordinates>
+    </Location>
+  </Car>
+  <Car>
+    <Specifications>
+      <Year>2015</Year>
+      <Make>Nissan</Make>
+      <Model>Altima</Model>
+      <Trim>2.5 S</Trim>
+      <Body>Sedan</Body>
+      <Transmission>automatic</Transmission>
+    </Specifications>
+    <Seller>
+      <Name>enterprise vehicle exchange / tra / rental / tulsa</Name>
+      <State>ca</State>
+      <SaleDate>Tue Dec 30 2014 12:00:00 GMT-0800 (PST)</SaleDate>
+      <SellingPrice>10900</SellingPrice>
+    </Seller>
+    <VIN>1n4al3ap1fn326013</VIN>
+    <Condition>1</Condition>
+    <Odometer>5554</Odometer>
+    <Color>gray</Color>
+    <Interior>black</Interior>
+    <MMR>15350</MMR>
+    <Location>
+      <City>CA</City>
+      <Coordinates>
+        <Latitude>36.7014631</Latitude>
+        <Longitude>-118.7559970</Longitude>
+      </Coordinates>
+    </Location>
+  </Car>
+  <Car>
+    <Specifications>
+      <Year>2014</Year>
+      <Make>BMW</Make>
+      <Model>M5</Model>
+      <Trim>Base</Trim>
+      <Body>Sedan</Body>
+      <Transmission>automatic</Transmission>
+    </Specifications>
+    <Seller>
+      <Name>the hertz corporation</Name>
+      <State>ca</State>
+      <SaleDate>Wed Dec 17 2014 12:30:00 GMT-0800 (PST)</SaleDate>
+      <SellingPrice>65000</SellingPrice>
+    </Seller>
+    <VIN>wbsfv9c51ed593089</VIN>
+    <Condition>34</Condition>
+    <Odometer>14943</Odometer>
+    <Color>black</Color>
+    <Interior>black</Interior>
+    <MMR>69000</MMR>
+    <Location>
+      <City>CA</City>
+      <Coordinates>
+        <Latitude>36.7014631</Latitude>
+        <Longitude>-118.7559970</Longitude>
+      </Coordinates>
+    </Location>
+  </Car>
+</Cars>
