@@ -24,21 +24,45 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15server_services.proto\x12\x0fserver_services\"6\n\x13SendFileRequestBody\x12\x0c\n\x04\x66ile\x18\x01 \x01(\x0c\x12\x11\n\tfile_name\x18\x02 \x01(\t\"8\n\x14SendFileResponseBody\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"8\n\x15SendFileChunksRequest\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x11\n\tfile_name\x18\x02 \x01(\t\":\n\x16SendFileChunksResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xcf\x01\n\x0fSendFileService\x12W\n\x08SendFile\x12$.server_services.SendFileRequestBody\x1a%.server_services.SendFileResponseBody\x12\x63\n\x0eSendFileChunks\x12&.server_services.SendFileChunksRequest\x1a\'.server_services.SendFileChunksResponse(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15server_services.proto\x12\x04\x63\x61rs\"2\n\x0b\x43oordinates\x12\x10\n\x08latitude\x18\x01 \x01(\x01\x12\x11\n\tlongitude\x18\x02 \x01(\x01\"\x8e\x01\n\x0eSpecifications\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x0c\n\x04make\x18\x02 \x01(\t\x12\r\n\x05model\x18\x03 \x01(\t\x12\x0c\n\x04trim\x18\x04 \x01(\t\x12\x0c\n\x04\x62ody\x18\x05 \x01(\t\x12\x14\n\x0ctransmission\x18\x06 \x01(\t\x12\r\n\x05\x63olor\x18\x07 \x01(\t\x12\x10\n\x08interior\x18\x08 \x01(\t\"\xf6\x01\n\x03\x43\x61r\x12\x0b\n\x03vin\x18\x01 \x01(\t\x12\x11\n\tcondition\x18\x02 \x01(\x05\x12\x10\n\x08odometer\x18\x03 \x01(\x05\x12\x0b\n\x03mmr\x18\x04 \x01(\x05\x12,\n\x0especifications\x18\x05 \x01(\x0b\x32\x14.cars.Specifications\x12\x13\n\x0bseller_name\x18\x06 \x01(\t\x12\x14\n\x0cseller_state\x18\x07 \x01(\t\x12-\n\x12seller_coordinates\x18\x08 \x01(\x0b\x32\x11.cars.Coordinates\x12\x11\n\tsale_date\x18\t \x01(\t\x12\x15\n\rselling_price\x18\n \x01(\x05\"\x13\n\x11GetAllCarsRequest\"-\n\x12GetAllCarsResponse\x12\x17\n\x04\x63\x61rs\x18\x01 \x03(\x0b\x32\t.cars.Car\"8\n\x19GetCarsByMakeModelRequest\x12\x0c\n\x04make\x18\x01 \x01(\t\x12\r\n\x05model\x18\x02 \x01(\t\"5\n\x1aGetCarsByMakeModelResponse\x12\x17\n\x04\x63\x61rs\x18\x01 \x03(\x0b\x32\t.cars.Car\"B\n\x1aGetCarsByPriceRangeRequest\x12\x11\n\tmin_price\x18\x01 \x01(\x05\x12\x11\n\tmax_price\x18\x02 \x01(\x05\"6\n\x1bGetCarsByPriceRangeResponse\x12\x17\n\x04\x63\x61rs\x18\x01 \x03(\x0b\x32\t.cars.Car\"@\n\x1dGetCarsByYearConditionRequest\x12\x0c\n\x04year\x18\x01 \x01(\x05\x12\x11\n\tcondition\x18\x02 \x01(\x05\"9\n\x1eGetCarsByYearConditionResponse\x12\x17\n\x04\x63\x61rs\x18\x01 \x03(\x0b\x32\t.cars.Car\"6\n\x13SendFileRequestBody\x12\x0c\n\x04\x66ile\x18\x01 \x01(\x0c\x12\x11\n\tfile_name\x18\x02 \x01(\t\"8\n\x14SendFileResponseBody\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"8\n\x15SendFileChunksRequest\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x11\n\tfile_name\x18\x02 \x01(\t\":\n\x16SendFileChunksResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xe7\x02\n\nCarService\x12?\n\nGetAllCars\x12\x17.cars.GetAllCarsRequest\x1a\x18.cars.GetAllCarsResponse\x12W\n\x12GetCarsByMakeModel\x12\x1f.cars.GetCarsByMakeModelRequest\x1a .cars.GetCarsByMakeModelResponse\x12Z\n\x13GetCarsByPriceRange\x12 .cars.GetCarsByPriceRangeRequest\x1a!.cars.GetCarsByPriceRangeResponse\x12\x63\n\x16GetCarsByYearCondition\x12#.cars.GetCarsByYearConditionRequest\x1a$.cars.GetCarsByYearConditionResponse2\xa3\x01\n\x0fSendFileService\x12\x41\n\x08SendFile\x12\x19.cars.SendFileRequestBody\x1a\x1a.cars.SendFileResponseBody\x12M\n\x0eSendFileChunks\x12\x1b.cars.SendFileChunksRequest\x1a\x1c.cars.SendFileChunksResponse(\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'server_services_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_SENDFILEREQUESTBODY']._serialized_start=42
-  _globals['_SENDFILEREQUESTBODY']._serialized_end=96
-  _globals['_SENDFILERESPONSEBODY']._serialized_start=98
-  _globals['_SENDFILERESPONSEBODY']._serialized_end=154
-  _globals['_SENDFILECHUNKSREQUEST']._serialized_start=156
-  _globals['_SENDFILECHUNKSREQUEST']._serialized_end=212
-  _globals['_SENDFILECHUNKSRESPONSE']._serialized_start=214
-  _globals['_SENDFILECHUNKSRESPONSE']._serialized_end=272
-  _globals['_SENDFILESERVICE']._serialized_start=275
-  _globals['_SENDFILESERVICE']._serialized_end=482
+  _globals['_COORDINATES']._serialized_start=31
+  _globals['_COORDINATES']._serialized_end=81
+  _globals['_SPECIFICATIONS']._serialized_start=84
+  _globals['_SPECIFICATIONS']._serialized_end=226
+  _globals['_CAR']._serialized_start=229
+  _globals['_CAR']._serialized_end=475
+  _globals['_GETALLCARSREQUEST']._serialized_start=477
+  _globals['_GETALLCARSREQUEST']._serialized_end=496
+  _globals['_GETALLCARSRESPONSE']._serialized_start=498
+  _globals['_GETALLCARSRESPONSE']._serialized_end=543
+  _globals['_GETCARSBYMAKEMODELREQUEST']._serialized_start=545
+  _globals['_GETCARSBYMAKEMODELREQUEST']._serialized_end=601
+  _globals['_GETCARSBYMAKEMODELRESPONSE']._serialized_start=603
+  _globals['_GETCARSBYMAKEMODELRESPONSE']._serialized_end=656
+  _globals['_GETCARSBYPRICERANGEREQUEST']._serialized_start=658
+  _globals['_GETCARSBYPRICERANGEREQUEST']._serialized_end=724
+  _globals['_GETCARSBYPRICERANGERESPONSE']._serialized_start=726
+  _globals['_GETCARSBYPRICERANGERESPONSE']._serialized_end=780
+  _globals['_GETCARSBYYEARCONDITIONREQUEST']._serialized_start=782
+  _globals['_GETCARSBYYEARCONDITIONREQUEST']._serialized_end=846
+  _globals['_GETCARSBYYEARCONDITIONRESPONSE']._serialized_start=848
+  _globals['_GETCARSBYYEARCONDITIONRESPONSE']._serialized_end=905
+  _globals['_SENDFILEREQUESTBODY']._serialized_start=907
+  _globals['_SENDFILEREQUESTBODY']._serialized_end=961
+  _globals['_SENDFILERESPONSEBODY']._serialized_start=963
+  _globals['_SENDFILERESPONSEBODY']._serialized_end=1019
+  _globals['_SENDFILECHUNKSREQUEST']._serialized_start=1021
+  _globals['_SENDFILECHUNKSREQUEST']._serialized_end=1077
+  _globals['_SENDFILECHUNKSRESPONSE']._serialized_start=1079
+  _globals['_SENDFILECHUNKSRESPONSE']._serialized_end=1137
+  _globals['_CARSERVICE']._serialized_start=1140
+  _globals['_CARSERVICE']._serialized_end=1499
+  _globals['_SENDFILESERVICE']._serialized_start=1502
+  _globals['_SENDFILESERVICE']._serialized_end=1665
 # @@protoc_insertion_point(module_scope)

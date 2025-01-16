@@ -25,8 +25,8 @@ if _version_not_supported:
     )
 
 
-class CarServiceStub(object):
-    """Service definition for car-related operations
+class WeatherServiceStub(object):
+    """Service to handle weather-related queries.
     """
 
     def __init__(self, channel):
@@ -35,93 +35,77 @@ class CarServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetAllCars = channel.unary_unary(
-                '/cars.CarService/GetAllCars',
-                request_serializer=server__services__pb2.GetAllCarsRequest.SerializeToString,
-                response_deserializer=server__services__pb2.GetAllCarsResponse.FromString,
+        self.GetWeatherByRegion = channel.unary_unary(
+                '/weather.WeatherService/GetWeatherByRegion',
+                request_serializer=server__services__pb2.GetWeatherByRegionRequest.SerializeToString,
+                response_deserializer=server__services__pb2.GetWeatherByRegionResponse.FromString,
                 _registered_method=True)
-        self.GetCarsByMakeModel = channel.unary_unary(
-                '/cars.CarService/GetCarsByMakeModel',
-                request_serializer=server__services__pb2.GetCarsByMakeModelRequest.SerializeToString,
-                response_deserializer=server__services__pb2.GetCarsByMakeModelResponse.FromString,
+        self.GetWeatherByLocation = channel.unary_unary(
+                '/weather.WeatherService/GetWeatherByLocation',
+                request_serializer=server__services__pb2.GetWeatherByLocationRequest.SerializeToString,
+                response_deserializer=server__services__pb2.GetWeatherByLocationResponse.FromString,
                 _registered_method=True)
-        self.GetCarsByPriceRange = channel.unary_unary(
-                '/cars.CarService/GetCarsByPriceRange',
-                request_serializer=server__services__pb2.GetCarsByPriceRangeRequest.SerializeToString,
-                response_deserializer=server__services__pb2.GetCarsByPriceRangeResponse.FromString,
-                _registered_method=True)
-        self.GetCarsByYearCondition = channel.unary_unary(
-                '/cars.CarService/GetCarsByYearCondition',
-                request_serializer=server__services__pb2.GetCarsByYearConditionRequest.SerializeToString,
-                response_deserializer=server__services__pb2.GetCarsByYearConditionResponse.FromString,
+        self.GetWeatherByDateRange = channel.unary_unary(
+                '/weather.WeatherService/GetWeatherByDateRange',
+                request_serializer=server__services__pb2.GetWeatherByDateRangeRequest.SerializeToString,
+                response_deserializer=server__services__pb2.GetWeatherByDateRangeResponse.FromString,
                 _registered_method=True)
 
 
-class CarServiceServicer(object):
-    """Service definition for car-related operations
+class WeatherServiceServicer(object):
+    """Service to handle weather-related queries.
     """
 
-    def GetAllCars(self, request, context):
+    def GetWeatherByRegion(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetCarsByMakeModel(self, request, context):
+    def GetWeatherByLocation(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetCarsByPriceRange(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetCarsByYearCondition(self, request, context):
+    def GetWeatherByDateRange(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_CarServiceServicer_to_server(servicer, server):
+def add_WeatherServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetAllCars': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetAllCars,
-                    request_deserializer=server__services__pb2.GetAllCarsRequest.FromString,
-                    response_serializer=server__services__pb2.GetAllCarsResponse.SerializeToString,
+            'GetWeatherByRegion': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetWeatherByRegion,
+                    request_deserializer=server__services__pb2.GetWeatherByRegionRequest.FromString,
+                    response_serializer=server__services__pb2.GetWeatherByRegionResponse.SerializeToString,
             ),
-            'GetCarsByMakeModel': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetCarsByMakeModel,
-                    request_deserializer=server__services__pb2.GetCarsByMakeModelRequest.FromString,
-                    response_serializer=server__services__pb2.GetCarsByMakeModelResponse.SerializeToString,
+            'GetWeatherByLocation': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetWeatherByLocation,
+                    request_deserializer=server__services__pb2.GetWeatherByLocationRequest.FromString,
+                    response_serializer=server__services__pb2.GetWeatherByLocationResponse.SerializeToString,
             ),
-            'GetCarsByPriceRange': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetCarsByPriceRange,
-                    request_deserializer=server__services__pb2.GetCarsByPriceRangeRequest.FromString,
-                    response_serializer=server__services__pb2.GetCarsByPriceRangeResponse.SerializeToString,
-            ),
-            'GetCarsByYearCondition': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetCarsByYearCondition,
-                    request_deserializer=server__services__pb2.GetCarsByYearConditionRequest.FromString,
-                    response_serializer=server__services__pb2.GetCarsByYearConditionResponse.SerializeToString,
+            'GetWeatherByDateRange': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetWeatherByDateRange,
+                    request_deserializer=server__services__pb2.GetWeatherByDateRangeRequest.FromString,
+                    response_serializer=server__services__pb2.GetWeatherByDateRangeResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cars.CarService', rpc_method_handlers)
+            'weather.WeatherService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('cars.CarService', rpc_method_handlers)
+    server.add_registered_method_handlers('weather.WeatherService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class CarService(object):
-    """Service definition for car-related operations
+class WeatherService(object):
+    """Service to handle weather-related queries.
     """
 
     @staticmethod
-    def GetAllCars(request,
+    def GetWeatherByRegion(request,
             target,
             options=(),
             channel_credentials=None,
@@ -134,9 +118,9 @@ class CarService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/cars.CarService/GetAllCars',
-            server__services__pb2.GetAllCarsRequest.SerializeToString,
-            server__services__pb2.GetAllCarsResponse.FromString,
+            '/weather.WeatherService/GetWeatherByRegion',
+            server__services__pb2.GetWeatherByRegionRequest.SerializeToString,
+            server__services__pb2.GetWeatherByRegionResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -148,7 +132,7 @@ class CarService(object):
             _registered_method=True)
 
     @staticmethod
-    def GetCarsByMakeModel(request,
+    def GetWeatherByLocation(request,
             target,
             options=(),
             channel_credentials=None,
@@ -161,9 +145,9 @@ class CarService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/cars.CarService/GetCarsByMakeModel',
-            server__services__pb2.GetCarsByMakeModelRequest.SerializeToString,
-            server__services__pb2.GetCarsByMakeModelResponse.FromString,
+            '/weather.WeatherService/GetWeatherByLocation',
+            server__services__pb2.GetWeatherByLocationRequest.SerializeToString,
+            server__services__pb2.GetWeatherByLocationResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -175,7 +159,7 @@ class CarService(object):
             _registered_method=True)
 
     @staticmethod
-    def GetCarsByPriceRange(request,
+    def GetWeatherByDateRange(request,
             target,
             options=(),
             channel_credentials=None,
@@ -188,36 +172,9 @@ class CarService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/cars.CarService/GetCarsByPriceRange',
-            server__services__pb2.GetCarsByPriceRangeRequest.SerializeToString,
-            server__services__pb2.GetCarsByPriceRangeResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def GetCarsByYearCondition(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/cars.CarService/GetCarsByYearCondition',
-            server__services__pb2.GetCarsByYearConditionRequest.SerializeToString,
-            server__services__pb2.GetCarsByYearConditionResponse.FromString,
+            '/weather.WeatherService/GetWeatherByDateRange',
+            server__services__pb2.GetWeatherByDateRangeRequest.SerializeToString,
+            server__services__pb2.GetWeatherByDateRangeResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -230,7 +187,7 @@ class CarService(object):
 
 
 class SendFileServiceStub(object):
-    """Service definition for file sending operations
+    """Service definition for file sending operations.
     """
 
     def __init__(self, channel):
@@ -240,29 +197,31 @@ class SendFileServiceStub(object):
             channel: A grpc.Channel.
         """
         self.SendFile = channel.unary_unary(
-                '/cars.SendFileService/SendFile',
+                '/weather.SendFileService/SendFile',
                 request_serializer=server__services__pb2.SendFileRequestBody.SerializeToString,
                 response_deserializer=server__services__pb2.SendFileResponseBody.FromString,
                 _registered_method=True)
         self.SendFileChunks = channel.stream_unary(
-                '/cars.SendFileService/SendFileChunks',
+                '/weather.SendFileService/SendFileChunks',
                 request_serializer=server__services__pb2.SendFileChunksRequest.SerializeToString,
                 response_deserializer=server__services__pb2.SendFileChunksResponse.FromString,
                 _registered_method=True)
 
 
 class SendFileServiceServicer(object):
-    """Service definition for file sending operations
+    """Service definition for file sending operations.
     """
 
     def SendFile(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Unary RPC to send a file.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def SendFileChunks(self, request_iterator, context):
-        """Missing associated documentation comment in .proto file."""
+        """Streaming RPC to send file chunks.
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -282,14 +241,14 @@ def add_SendFileServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'cars.SendFileService', rpc_method_handlers)
+            'weather.SendFileService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('cars.SendFileService', rpc_method_handlers)
+    server.add_registered_method_handlers('weather.SendFileService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
 class SendFileService(object):
-    """Service definition for file sending operations
+    """Service definition for file sending operations.
     """
 
     @staticmethod
@@ -306,7 +265,7 @@ class SendFileService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/cars.SendFileService/SendFile',
+            '/weather.SendFileService/SendFile',
             server__services__pb2.SendFileRequestBody.SerializeToString,
             server__services__pb2.SendFileResponseBody.FromString,
             options,
@@ -333,7 +292,7 @@ class SendFileService(object):
         return grpc.experimental.stream_unary(
             request_iterator,
             target,
-            '/cars.SendFileService/SendFileChunks',
+            '/weather.SendFileService/SendFileChunks',
             server__services__pb2.SendFileChunksRequest.SerializeToString,
             server__services__pb2.SendFileChunksResponse.FromString,
             options,
