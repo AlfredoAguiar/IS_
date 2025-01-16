@@ -49,7 +49,7 @@ services:
 
   # GraphQL Server
   graphql-server:
-    build: Is-final/test-app/graphql/graphql
+    build: ./test-app/graphql/graphql 
     container_name: graphql-server
     ports:
       - "9000:9000"

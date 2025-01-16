@@ -1,0 +1,52 @@
+[
+  {
+    "SpecID": 1,
+    "VIN": "1HGBH41JXMN109186",
+    "Year": 2020,
+    "Make": "Toyota",
+    "Model": "Corolla",
+    "Trim": "LE",
+    "Body": "Sedan",
+    "Transmission": "Automatic"
+  },
+  {
+    "SpecID": 2,
+    "VIN": "1HGBH41JXMN109187",
+    "Year": 2021,
+    "Make": "Honda",
+    "Model": "Civic",
+    "Trim": "EX",
+    "Body": "Sedan",
+    "Transmission": "Manual"
+  },
+  {
+    "SpecID": 3,
+    "VIN": "1HGBH41JXMN109188",
+    "Year": 2019,
+    "Make": "Ford",
+    "Model": "Focus",
+    "Trim": "SE",
+    "Body": "Hatchback",
+    "Transmission": "Automatic"
+  },
+  {
+    "SpecID": 4,
+    "VIN": "1HGBH41JXMN109189",
+    "Year": 2022,
+    "Make": "Tesla",
+    "Model": "Model 3",
+    "Trim": "Standard",
+    "Body": "Sedan",
+    "Transmission": "Automatic"
+  },
+  {
+    "SpecID": 5,
+    "VIN": "1HGBH41JXMN109190",
+    "Year": 2018,
+    "Make": "Chevrolet",
+    "Model": "Malibu",
+    "Trim": "LT",
+    "Body": "Sedan",
+    "Transmission": "Automatic"
+  }
+]

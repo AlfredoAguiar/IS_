@@ -1,0 +1,42 @@
+[
+  {
+    "SellerID": 1,
+    "VIN": "1HGBH41JXMN109186",
+    "Name": "John Doe",
+    "State": "CA",
+    "SaleDate": "2023-01-15",
+    "SellingPrice": 16000
+  },
+  {
+    "SellerID": 2,
+    "VIN": "1HGBH41JXMN109187",
+    "Name": "Jane Smith",
+    "State": "NY",
+    "SaleDate": "2023-02-10",
+    "SellingPrice": 19000
+  },
+  {
+    "SellerID": 3,
+    "VIN": "1HGBH41JXMN109188",
+    "Name": "Robert Brown",
+    "State": "TX",
+    "SaleDate": "2023-03-05",
+    "SellingPrice": 12500
+  },
+  {
+    "SellerID": 4,
+    "VIN": "1HGBH41JXMN109189",
+    "Name": "Emily Davis",
+    "State": "FL",
+    "SaleDate": "2023-04-20",
+    "SellingPrice": 23000
+  },
+  {
+    "SellerID": 5,
+    "VIN": "1HGBH41JXMN109190",
+    "Name": "Chris Johnson",
+    "State": "IL",
+    "SaleDate": "2023-05-15",
+    "SellingPrice": 9500
+  }
+]

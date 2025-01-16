@@ -1,0 +1,37 @@
+[
+  {
+    "LocationID": 1,
+    "VIN": "1HGBH41JXMN109186",
+    "City": "Los Angeles",
+    "Latitude": 34.052235,
+    "Longitude": -118.243683
+  },
+  {
+    "LocationID": 2,
+    "VIN": "1HGBH41JXMN109187",
+    "City": "New York",
+    "Latitude": 40.712776,
+    "Longitude": -74.005974
+  },
+  {
+    "LocationID": 3,
+    "VIN": "1HGBH41JXMN109188",
+    "City": "Houston",
+    "Latitude": 29.760427,
+    "Longitude": -95.369804
+  },
+  {
+    "LocationID": 4,
+    "VIN": "1HGBH41JXMN109189",
+    "City": "Miami",
+    "Latitude": 25.761681,
+    "Longitude": -80.191788
+  },
+  {
+    "LocationID": 5,
+    "VIN": "1HGBH41JXMN109190",
+    "City": "Chicago",
+    "Latitude": 41.878113,
+    "Longitude": -87.629799
+  }
+]

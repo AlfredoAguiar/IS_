@@ -1,0 +1,42 @@
+[
+  {
+    "VIN": "1HGBH41JXMN109186",
+    "Condition": 5,
+    "Odometer": 45000,
+    "Color": "Red",
+    "Interior": "Black",
+    "MMR": 15000
+  },
+  {
+    "VIN": "1HGBH41JXMN109187",
+    "Condition": 4,
+    "Odometer": 30000,
+    "Color": "Blue",
+    "Interior": "Gray",
+    "MMR": 18000
+  },
+  {
+    "VIN": "1HGBH41JXMN109188",
+    "Condition": 3,
+    "Odometer": 60000,
+    "Color": "White",
+    "Interior": "Beige",
+    "MMR": 12000
+  },
+  {
+    "VIN": "1HGBH41JXMN109189",
+    "Condition": 5,
+    "Odometer": 10000,
+    "Color": "Black",
+    "Interior": "Black",
+    "MMR": 22000
+  },
+  {
+    "VIN": "1HGBH41JXMN109190",
+    "Condition": 2,
+    "Odometer": 80000,
+    "Color": "Green",
+    "Interior": "Gray",
+    "MMR": 9000
+  }
+]

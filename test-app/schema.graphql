@@ -1,0 +1,90 @@
+type Car {
+  VIN: String! # Primary Key
+  Condition: Int
+  Odometer: Int
+  Color: String
+  Interior: String
+  MMR: Int
+  Specifications: [Specification]
+  Sellers: [Seller]
+  Locations: [Location]
+}
+
+type Specification {
+  SpecID: ID! # Primary Key
+  VIN: String! # Foreign Key referencing Car.VIN
+  Year: Int
+  Make: String
+  Model: String
+  Trim: String
+  Body: String
+  Transmission: String
+  Car: Car
+}
+
+type Seller {
+  SellerID: ID! # Primary Key
+  VIN: String! # Foreign Key referencing Car.VIN
+  Name: String
+  State: String
+  SaleDate: String
+  SellingPrice: Int
+  Car: Car
+}
+
+type Location {
+  LocationID: ID! # Primary Key
+  VIN: String! # Foreign Key referencing Car.VIN
+  City: String
+  Latitude: Float
+  Longitude: Float
+  Car: Car
+}
+
+type Query {
+  cars: [Car]
+  car(VIN: String!): Car
+  specifications: [Specification]
+  specification(SpecID: ID!): Specification
+  sellers: [Seller]
+  seller(SellerID: ID!): Seller
+  locations: [Location]
+  location(LocationID: ID!): Location
+}
+
+type Mutation {
+  addCar(
+    VIN: String!,
+    Condition: Int,
+    Odometer: Int,
+    Color: String,
+    Interior: String,
+    MMR: Int
+  ): Car
+
+  addSpecification(
+    VIN: String!,
+    Year: Int,
+    Make: String,
+    Model: String,
+    Trim: String,
+    Body: String,
+    Transmission: String
+  ): Specification
+
+  addSeller(
+    VIN: String!,
+    Name: String,
+    State: String,
+    SaleDate: String,
+    SellingPrice: Int
+  ): Seller
+
+  addLocation(
+    VIN: String!,
+    City: String,
+    Latitude: Float,
+    Longitude: Float
+  ): Location
+}
+
