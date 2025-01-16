@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # gRPC Server
+  # First gRPC Server
   grpc-server:
     build: grpc-server
     container_name: grpc-server
@@ -27,6 +27,31 @@ services:
     networks:
       - app-network
 
+  # Second gRPC Server
+  grpc-server-2:
+    build: grpc-server-2
+    container_name: grpc-server-2
+    ports:
+      - "50053:50053"
+    volumes:
+      - grpc-server-2:/app/media
+    environment:
+      - GRPC_SERVER_PORT=50053
+      - MAX_WORKERS=10
+      - MEDIA_PATH=/app/media
+      - DBNAME=mydatabase
+      - DBUSERNAME=myuser
+      - DBPASSWORD=mypassword
+      - DBHOST=db
+      - DBPORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=user
+      - RABBITMQ_PW=password
+    depends_on:
+      - db
+    networks:
+      - app-network
   # REST API Server
   rest-api-server:
     build: rest_api_server
@@ -47,17 +72,6 @@ services:
     networks:
       - app-network
 
-  # GraphQL Server
-  graphql-server:
-    build: Is-final/test-app/graphql/graphql
-    container_name: graphql-server
-    ports:
-      - "9000:9000"
-    depends_on:
-      - db
-    command: ["python", "app.py"]
-    networks:
-      - app-network
 
   # RabbitMQ Server
 
@@ -83,6 +97,7 @@ services:
 # Volumes for persistent storage
 volumes:
   grpc-server:
+  grpc-server-2:
   pgdata:
 
 # Networks definition for better isolation

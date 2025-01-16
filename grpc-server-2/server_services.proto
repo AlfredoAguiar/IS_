@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package weather;
+
+// Message representing the coordinates of a location.
+message Coordinates {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+// Message representing a single weather data entry.
+message WeatherData {
+  string region = 1;
+  string country = 2;
+  string state = 3; // Nullable state.
+  string city = 4;
+  string date = 5;
+  float avg_temperature = 6;
+  Coordinates coordinates = 7;
+}
+
+// Message representing a collection of weather reports.
+message WeatherReports {
+  repeated WeatherData weather_data = 1;
+}
+
+// Query to get weather data by region.
+message GetWeatherByRegionRequest {
+  string region = 1;
+}
+
+message GetWeatherByRegionResponse {
+  repeated WeatherData weather_data = 1;
+}
+
+// Query to get weather data by country and city.
+message GetWeatherByLocationRequest {
+  string country = 1;
+  string city = 2;
+}
+
+message GetWeatherByLocationResponse {
+  WeatherData weather_data = 1;
+}
+
+// Query to get weather data by date range.
+message GetWeatherByDateRangeRequest {
+  string start_date = 1; // Format: YYYY-MM-DD.
+  string end_date = 2;   // Format: YYYY-MM-DD.
+}
+
+message GetWeatherByDateRangeResponse {
+  repeated WeatherData weather_data = 1;
+}
+
+// Service to handle weather-related queries.
+service WeatherService {
+  rpc GetWeatherByRegion (GetWeatherByRegionRequest) returns (GetWeatherByRegionResponse);
+  rpc GetWeatherByLocation (GetWeatherByLocationRequest) returns (GetWeatherByLocationResponse);
+  rpc GetWeatherByDateRange (GetWeatherByDateRangeRequest) returns (GetWeatherByDateRangeResponse);
+}
+
+// Request message for sending a file.
+message SendFileRequestBody {
+  bytes file = 1;  // File content as bytes.
+  string file_name = 2;  // File name (optional).
+}
+
+// Response message for sending a file.
+message SendFileResponseBody {
+  bool success = 1;  // Indicates whether the operation was successful.
+  string message = 2;  // Status message.
+}
+
+// Request message for sending file chunks.
+message SendFileChunksRequest {
+  bytes data = 1;  // Chunk of the file.
+  string file_name = 2;  // File name (optional, sent in the first chunk or metadata).
+}
+
+// Response message for sending file chunks.
+message SendFileChunksResponse {
+  bool success = 1;  // Indicates if the upload was successful.
+  string message = 2;  // Additional status message.
+}
+
+// Service definition for file sending operations.
+service SendFileService {
+  // Unary RPC to send a file.
+  rpc SendFile (SendFileRequestBody) returns (SendFileResponseBody);
+
+  // Streaming RPC to send file chunks.
+  rpc SendFileChunks (stream SendFileChunksRequest) returns (SendFileChunksResponse);
+}

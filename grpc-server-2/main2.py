@@ -3,16 +3,16 @@ import os
 import grpc
 import logging
 import pg8000
-import pika
-import xml.etree.ElementTree as ET
-from xmlLocalização.uniqueStates import uniqueStates
-from xmlLocalização.get_localização_states import StateCoordinatesUpdater
+from xmlLocalização.uniqueCities import uniqueCities
+from xmlLocalização.CityCoordinatesUpdater import CityCoordinatesUpdater
 from xmlLocalização.loc_states import XMLLocationUpdater
-from xmlGeneration.csv_to_xml_converter_cars import CSVtoXMLConverter
+from xmlGeneration.csv_to_xml_converter_Temp import CSVtoXMLConverter
 from xmlValidate.validate_xml import validate_xml
 import server_services_pb2_grpc
 import server_services_pb2
 from settings import GRPC_SERVER_PORT, MAX_WORKERS, MEDIA_PATH, DBNAME, DBUSERNAME, DBPASSWORD, DBHOST, DBPORT
+from datetime import datetime
+from xml.etree import ElementTree as ET
 
 # Configure logging
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
@@ -20,7 +20,6 @@ logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 logger = logging.getLogger("FileService")
 
 class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
-
     def save_csv_file(self, file_bytes, file_path):
         try:
             with open(file_path, 'wb') as f:
@@ -40,12 +39,16 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
                 database=DBNAME
             )
             cursor = conn.cursor()
-            # Read and execute the SQL for table creation
-            sql_file_path = 'createTablesCar.sql'
+
+            # Read the SQL file containing the table creation queries
+            sql_file_path = 'createTablesTemp.sql'
             with open(sql_file_path, 'r') as file:
                 sql_queries = file.read()
+
+            # Execute the SQL queries
             cursor.execute(sql_queries)
             conn.commit()
+
             logger.info("Database tables ensured to exist.")
         except Exception as e:
             logger.error(f"Database Error: {str(e)}", exc_info=True)
@@ -62,7 +65,7 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
 
     def process_unique_states(self, xml_file_path, xml_US_path):
         try:
-            uniqueStates(xml_file_path, xml_US_path)
+            uniqueCities(xml_file_path, xml_US_path)
             logger.info(f"Unique states processed and saved in XML at {xml_US_path}")
         except Exception as e:
             logger.error(f"Error processing unique states in XML: {str(e)}", exc_info=True)
@@ -83,7 +86,7 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
 
     def update_coordinates_in_xml(self, xml_file_path, xml_Final):
         try:
-            coordinates_updater = StateCoordinatesUpdater(
+            coordinates_updater = CityCoordinatesUpdater(
                 input_path=xml_file_path,
                 output_path=xml_Final
             )
@@ -107,6 +110,7 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             context.set_details(f"XML Validation Error: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
             return False
+
     def SendFile(self, request, context):
         os.makedirs(MEDIA_PATH, exist_ok=True)
         csv_file_path = os.path.join(MEDIA_PATH, request.file_name + ".csvtest")
@@ -234,129 +238,110 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             context.set_details(f"General Error: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
             return server_services_pb2.SendFileChunksResponse(success=False)
-
-class CarService(server_services_pb2_grpc.CarServiceServicer):
-
-    def extract_car_data(self, xml_file_path):
-        car_data = []
+class WeatherService(server_services_pb2_grpc.WeatherServiceServicer):
+    def parse_weather_data_from_xml(self, xml_file_path):
+        weather_data = []
         try:
             tree = ET.parse(xml_file_path)
             root = tree.getroot()
 
-            for car_elem in root.findall('Car'):
-                vin = car_elem.find('VIN').text
-                condition = car_elem.find('Condition').text
-                odometer = car_elem.find('Odometer').text
-                mmr = car_elem.find('MMR').text
+            # Traverse through <WeatherData> elements
+            for record in root.findall('WeatherData'):
+                region = record.find('Region').text
+                country = record.find('Country').text
+                state = record.find('State').text if record.find('State') is not None else ""
+                city = record.find('City').text
+                raw_date = record.find('Date').text
+                try:
 
-                # Extracting the Specifications from the <Specifications> element
-                specifications_elem = car_elem.find('Specifications')
-                specifications = server_services_pb2.Specifications(
-                    year=int(specifications_elem.find('Year').text),
-                    make=specifications_elem.find('Make').text,
-                    model=specifications_elem.find('Model').text,
-                    trim=specifications_elem.find('Trim').text,
-                    body=specifications_elem.find('Body').text,
-                    transmission=specifications_elem.find('Transmission').text,
-                    color=specifications_elem.find('Color').text,
-                    interior=specifications_elem.find('Interior').text,
-                )
+                    parsed_date = datetime.strptime(raw_date, "%m/%d/%Y").strftime("%Y-%m-%d")
+                except ValueError:
+                    logger.warning(f"Invalid date format in XML: {raw_date}")
+                    continue
 
-                # Extracting Seller information
-                seller_elem = car_elem.find('Seller')
-                seller_name = seller_elem.find('Name').text
-                seller_state = seller_elem.find('State').text
+                avg_temperature = float(record.find('AvgTemperature').text)
+                latitude = float(record.find('./Coordinates/Latitude').text)
+                longitude = float(record.find('./Coordinates/Longitude').text)
 
-                # Extracting Coordinates from <State> inside <Seller>
-                latitude = float(seller_elem.find('./State/Coordinates/Latitude').text)
-                longitude = float(seller_elem.find('./State/Coordinates/Longitude').text)
 
-                # Extracting Sale Date and Selling Price
-                sale_date = seller_elem.find('SaleDate').text
-                selling_price = int(seller_elem.find('SellingPrice').text)
-
-                # Constructing the Car message with the extracted data
-                car = server_services_pb2.Car(
-                    vin=vin,
-                    condition=int(condition),
-                    odometer=int(odometer),
-                    mmr=int(mmr),
-                    specifications=specifications,
-                    seller_name=seller_name,
-                    seller_state=seller_state,
-                    seller_coordinates=server_services_pb2.Coordinates(
-                        latitude=latitude,
-                        longitude=longitude,
-                    ),
-                    sale_date=sale_date,
-                    selling_price=selling_price
-                )
-
-                car_data.append(car)
-
-            return car_data
+                weather_data.append(server_services_pb2.WeatherData(
+                    region=region,
+                    country=country,
+                    state=state,
+                    city=city,
+                    date=parsed_date,
+                    avg_temperature=avg_temperature,
+                    coordinates=server_services_pb2.Coordinates(latitude=latitude, longitude=longitude)
+                ))
         except Exception as e:
-            logger.error(f"Error extracting car data: {str(e)}", exc_info=True)
-            return []
+            logger.error(f"Error parsing XML: {str(e)}", exc_info=True)
+        return weather_data
 
-    def process_file(self, file_path, context):
-        return self.extract_car_data(file_path)
+    def GetWeatherByRegion(self, request, context):
+        xml_file_path = os.path.join(MEDIA_PATH, ".csv.xmlFinal")
+        weather_data = self.parse_weather_data_from_xml(xml_file_path)
 
-    def GetAllCars(self, request, context):
+        # Filter data by region
+        filtered_data = [data for data in weather_data if data.region == request.region]
+
+        if not filtered_data:
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            context.set_details("No weather data found for the specified region.")
+            return server_services_pb2.GetWeatherByRegionResponse(weather_data=[])
+
+        return server_services_pb2.GetWeatherByRegionResponse(weather_data=filtered_data)
+
+    def GetWeatherByLocation(self, request, context):
+        xml_file_path = os.path.join(MEDIA_PATH, ".csv.xmlFinal")
+        weather_data = self.parse_weather_data_from_xml(xml_file_path)
+
+        # Find data by country and city
+        for data in weather_data:
+            if data.country == request.country and data.city == request.city:
+                return server_services_pb2.GetWeatherByLocationResponse(weather_data=data)
+        context.set_code(grpc.StatusCode.NOT_FOUND)
+        context.set_details("Weather data not found for the specified location.")
+        return server_services_pb2.GetWeatherByLocationResponse()
+
+    def GetWeatherByDateRange(self, request, context):
+        xml_file_path = os.path.join(MEDIA_PATH, ".csv.xmlFinal")  # Adjust path if needed
+        weather_data = self.parse_weather_data_from_xml(xml_file_path)
+
         try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
-            return server_services_pb2.GetAllCarsResponse(cars=cars)
-        except Exception as e:
-            context.set_details(f"Error fetching cars: {str(e)}")
-            context.set_code(grpc.StatusCode.INTERNAL)
-            return server_services_pb2.GetAllCarsResponse()
+            # Parse start_date and end_date from the request
+            start_date = datetime.strptime(request.start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(request.end_date, "%Y-%m-%d")
+        except ValueError:
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("Invalid date format. Use YYYY-MM-DD.")
+            return server_services_pb2.GetWeatherByDateRangeResponse()
 
-    def GetCarsByMakeModel(self, request, context):
-        try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
-            filtered_cars = [car for car in cars if
-                             car.specifications.make == request.make and car.specifications.model == request.model]
-            return server_services_pb2.GetCarsByMakeModelResponse(cars=filtered_cars)
-        except Exception as e:
-            context.set_details(f"Error fetching cars: {str(e)}")
-            context.set_code(grpc.StatusCode.INTERNAL)
-            return server_services_pb2.GetCarsByMakeModelResponse()
+        # Filter data by date range
+        filtered_data = [
+            data for data in weather_data
+            if start_date <= datetime.strptime(data.date, "%Y-%m-%d") <= end_date
+        ]
 
+        if not filtered_data:
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            context.set_details("No weather data found for the specified date range.")
+            return server_services_pb2.GetWeatherByDateRangeResponse(weather_data=[])
 
-
-    def GetCarsByPriceRange(self, request, context):
-        try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
-            filtered_cars = [car for car in cars if request.min_price <= car.selling_price <= request.max_price]
-            return server_services_pb2.GetCarsByPriceRangeResponse(cars=filtered_cars)
-        except Exception as e:
-            context.set_details(f"Error fetching cars: {str(e)}")
-            context.set_code(grpc.StatusCode.INTERNAL)
-            return server_services_pb2.GetCarsByPriceRangeResponse()
-
-    def GetCarsByYearCondition(self, request, context):
-        try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
-            filtered_cars = [car for car in cars if
-                             car.specifications.year == request.year and car.condition == request.condition]
-            return server_services_pb2.GetCarsByYearConditionResponse(cars=filtered_cars)
-        except Exception as e:
-            context.set_details(f"Error fetching cars: {str(e)}")
-            context.set_code(grpc.StatusCode.INTERNAL)
-            return server_services_pb2.GetCarsByYearConditionResponse()
-
+        return server_services_pb2.GetWeatherByDateRangeResponse(weather_data=filtered_data)
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=MAX_WORKERS))
 
-    server_services_pb2_grpc.add_CarServiceServicer_to_server(CarService(), server)
+    # Add SendFileService
+    server_services_pb2_grpc.add_SendFileServiceServicer_to_server(SendFileService(), server)
+
+    # Add WeatherService
+    server_services_pb2_grpc.add_WeatherServiceServicer_to_server(WeatherService(), server)
 
     server.add_insecure_port(f'[::]:{GRPC_SERVER_PORT}')
     server.start()
-
     logger.info(f"gRPC Server started on port {GRPC_SERVER_PORT}")
     server.wait_for_termination()
-
 
 if __name__ == '__main__':
     serve()

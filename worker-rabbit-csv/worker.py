@@ -1,9 +1,7 @@
 import pika
-import json
-import os
 import logging
-from io import StringIO
-import pandas as pd
+import os
+import xml.etree.ElementTree as ET
 import pg8000
 
 # RabbitMQ Configuration
@@ -11,7 +9,7 @@ RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
 RABBITMQ_PORT = int(os.getenv("RABBITMQ_PORT", "5672"))
 RABBITMQ_USER = os.getenv("RABBITMQ_USER", "user")
 RABBITMQ_PW = os.getenv("RABBITMQ_PW", "password")
-QUEUE_NAME = 'csv_chunks'
+QUEUE_NAME = 'xml_final'
 
 # Database Configuration
 DBHOST = os.getenv('DBHOST', 'localhost')
@@ -25,11 +23,9 @@ LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 logger = logging.getLogger()
 
-# To handle multiple files concurrently
-file_data_store = {}
 
-def save_to_database(df):
-    """Save DataFrame to the database."""
+def save_to_database(car_data):
+    """Save extracted XML data to the database."""
     try:
         conn = pg8000.connect(
             host=DBHOST,
@@ -40,49 +36,109 @@ def save_to_database(df):
         )
         cursor = conn.cursor()
 
-        # Assuming a table 'data_table' exists with appropriate schema
-        for _, row in df.iterrows():
-            cursor.execute("INSERT INTO data_table (column1, column2) VALUES (%s, %s)", (row[0], row[1]))
-        
+        # Insert into Cars table
+        cursor.execute("""
+            INSERT INTO Cars (VIN, Condition, Odometer, MMR, Color, Interior)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            ON CONFLICT (VIN) DO NOTHING;
+        """, (
+            car_data['VIN'],
+            car_data['Condition'],
+            car_data['Odometer'],
+            car_data['MMR'],
+            car_data['Color'],
+            car_data['Interior']
+        ))
+
+        # Insert into Specifications table
+        cursor.execute("""
+            INSERT INTO Specifications (VIN, Year, Make, Model, Trim, Body, Transmission)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (VIN) DO NOTHING;
+        """, (
+            car_data['VIN'],
+            car_data['Year'],
+            car_data['Make'],
+            car_data['Model'],
+            car_data['Trim'],
+            car_data['Body'],
+            car_data['Transmission']
+        ))
+
+        # Insert into Sellers table
+        cursor.execute("""
+            INSERT INTO Sellers (VIN, Name, State, SaleDate, SellingPrice)
+            VALUES (%s, %s, %s, %s, %s)
+            ON CONFLICT (VIN) DO NOTHING;
+        """, (
+            car_data['VIN'],
+            car_data['SellerName'],
+            car_data['State'],
+            car_data['SaleDate'],
+            car_data['SellingPrice']
+        ))
+
+        # Insert into Locations table
+        cursor.execute("""
+            INSERT INTO Locations (VIN, City, Latitude, Longitude)
+            VALUES (%s, %s, %s, %s)
+            ON CONFLICT (VIN) DO NOTHING;
+        """, (
+            car_data['VIN'],
+            car_data['City'],
+            car_data['Latitude'],
+            car_data['Longitude']
+        ))
+
         conn.commit()
         cursor.close()
         conn.close()
-        logger.info("Data successfully saved to the database.")
+        logger.info(f"Data for VIN {car_data['VIN']} saved to the database.")
     except Exception as e:
         logger.error(f"Database save failed: {e}", exc_info=True)
+
+
+def parse_xml_and_save(xml_content):
+    """Parse XML content and save to the database."""
+    try:
+        root = ET.fromstring(xml_content)
+        for car in root.findall('Car'):
+            car_data = {
+                'VIN': car.find('VIN').text,
+                'Condition': int(car.find('Condition').text),
+                'Odometer': int(car.find('Odometer').text),
+                'MMR': int(car.find('MMR').text),
+                'Year': int(car.find('./Specifications/Year').text),
+                'Make': car.find('./Specifications/Make').text,
+                'Model': car.find('./Specifications/Model').text,
+                'Trim': car.find('./Specifications/Trim').text,
+                'Body': car.find('./Specifications/Body').text,
+                'Transmission': car.find('./Specifications/Transmission').text,
+                'Color': car.find('./Specifications/Color').text,
+                'Interior': car.find('./Specifications/Interior').text,
+                'SellerName': car.find('./Seller/Name').text,
+                'State': car.find('./Seller/State').text.strip(),
+                'City': "Unknown",  # Add a default or parse if available
+                'Latitude': float(car.find('./Seller/State/Coordinates/Latitude').text),
+                'Longitude': float(car.find('./Seller/State/Coordinates/Longitude').text),
+                'SaleDate': car.find('./Seller/SaleDate').text,
+                'SellingPrice': int(car.find('./Seller/SellingPrice').text)
+            }
+            save_to_database(car_data)
+    except Exception as e:
+        logger.error(f"Error parsing XML: {e}", exc_info=True)
+
 
 def process_message(ch, method, properties, body):
     """Process incoming RabbitMQ messages."""
     try:
-        file_id = properties.correlation_id  # Unique file identifier
-        if not file_id:
-            logger.error("Message missing correlation_id. Skipping...")
-            ch.basic_ack(delivery_tag=method.delivery_tag)
-            return
-        
-        str_stream = body.decode('utf-8')
-        if str_stream == "__EOF__":
-            logger.info(f"EOF marker received for file_id={file_id}. Finalizing...")
-            if file_id in file_data_store:
-                file_content = b"".join(file_data_store[file_id])
-                csv_text = file_content.decode('utf-8')
-                csvfile = StringIO(csv_text)
-                df = pd.read_csv(csvfile)
-                save_to_database(df)
-                del file_data_store[file_id]  # Clean up stored data
-                logger.info(f"File processing complete for file_id={file_id}.")
-            else:
-                logger.warning(f"No data found for file_id={file_id}.")
-        else:
-            logger.info(f"Received chunk for file_id={file_id}.")
-            if file_id not in file_data_store:
-                file_data_store[file_id] = []
-            file_data_store[file_id].append(body)
-        
+        logger.info("Received message from RabbitMQ.")
+        parse_xml_and_save(body.decode('utf-8'))
         ch.basic_ack(delivery_tag=method.delivery_tag)
     except Exception as e:
         logger.error(f"Error processing message: {e}", exc_info=True)
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+
 
 def main():
     """Main function to start the RabbitMQ worker."""
@@ -102,6 +158,7 @@ def main():
         channel.start_consuming()
     except Exception as e:
         logger.error(f"Error in main worker loop: {e}", exc_info=True)
+
 
 if __name__ == "__main__":
     main()

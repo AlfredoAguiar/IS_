@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Define the root element WeatherReports -->
+  <xs:element name="WeatherReports">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- Define the WeatherData elements inside WeatherReports -->
+        <xs:element name="WeatherData" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Region" type="xs:string" />
+              <xs:element name="Country" type="xs:string" />
+              <xs:element name="State" type="xs:string" minOccurs="0" />
+              <xs:element name="City" type="xs:string" />
+              <xs:element name="Date" type="xs:string" />
+              <xs:element name="AvgTemperature" type="xs:decimal" />
+              <!-- Define Coordinates block -->
+              <xs:element name="Coordinates">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Latitude" type="xs:decimal" />
+                    <xs:element name="Longitude" type="xs:decimal" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
