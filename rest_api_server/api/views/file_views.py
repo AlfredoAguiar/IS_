@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..serializers.file_serializer import FileUploadSerializer
 import grpc
-import api.grpc.server_services_pb2 as server_services_pb2
-import api.grpc.server_services_pb2_grpc as server_services_pb2_grpc
+from api.grpc_ import server_services_pb2 as server_services_pb2
+from api.grpc_ import server_services_pb2_grpc as server_services_pb2_grpc
 import os
 from rest_api_server.settings import GRPC_PORT, GRPC_HOST
 
@@ -111,3 +111,205 @@ class FileUploadChunksView(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
+class GetAllCarsView(APIView):
+        def get(self, request):
+
+            channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+            stub = server_services_pb2_grpc.CarServiceStub(channel)
+
+            try:
+                response = stub.GetAllCars(server_services_pb2.GetAllCarsRequest())
+                cars = [
+                    {
+                        "vin": car.vin,
+                        "condition": car.condition,
+                        "odometer": car.odometer,
+                        "mmr": car.mmr,
+                        "specifications": {
+                            "year": car.specifications.year,
+                            "make": car.specifications.make,
+                            "model": car.specifications.model,
+                            "trim": car.specifications.trim,
+                            "body": car.specifications.body,
+                            "transmission": car.specifications.transmission,
+                            "color": car.specifications.color,
+                            "interior": car.specifications.interior,
+                        },
+                        "seller_name": car.seller_name,
+                        "seller_state": car.seller_state,
+                        "seller_coordinates": {
+                            "latitude": car.seller_coordinates.latitude,
+                            "longitude": car.seller_coordinates.longitude,
+                        },
+                        "sale_date": car.sale_date,
+                        "selling_price": car.selling_price,
+                    }
+                    for car in response.cars
+                ]
+                return Response(cars, status=status.HTTP_200_OK)
+            except grpc.RpcError as e:
+                return Response({"error": f"gRPC call failed: {e.details()}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetCarsByMakeModelView(APIView):
+        def get(self, request):
+            """
+            Filters cars by make and model.
+            """
+            make = request.query_params.get("make")
+            model = request.query_params.get("model")
+            if not make or not model:
+                return Response({"error": "Make and model are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+            channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+            stub = server_services_pb2_grpc.CarServiceStub(channel)
+
+            try:
+                response = stub.GetCarsByMakeModel(
+                    server_services_pb2.GetCarsByMakeModelRequest(make=make, model=model)
+                )
+                cars = [
+                    {
+                        "vin": car.vin,
+                        "condition": car.condition,
+                        "odometer": car.odometer,
+                        "mmr": car.mmr,
+                        "specifications": {
+                            "year": car.specifications.year,
+                            "make": car.specifications.make,
+                            "model": car.specifications.model,
+                            "trim": car.specifications.trim,
+                            "body": car.specifications.body,
+                            "transmission": car.specifications.transmission,
+                            "color": car.specifications.color,
+                            "interior": car.specifications.interior,
+                        },
+                        "seller_name": car.seller_name,
+                        "seller_state": car.seller_state,
+                        "seller_coordinates": {
+                            "latitude": car.seller_coordinates.latitude,
+                            "longitude": car.seller_coordinates.longitude,
+                        },
+                        "sale_date": car.sale_date,
+                        "selling_price": car.selling_price,
+                    }
+                    for car in response.cars
+                ]
+                return Response(cars, status=status.HTTP_200_OK)
+            except grpc.RpcError as e:
+                return Response({"error": f"gRPC call failed: {e.details()}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetCarsByPriceRangeView(APIView):
+        def get(self, request):
+            """
+            Filters cars by price range.
+            """
+            min_price = request.query_params.get("min_price")
+            max_price = request.query_params.get("max_price")
+
+            if not min_price or not max_price:
+                return Response({"error": "min_price and max_price are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                min_price = int(min_price)
+                max_price = int(max_price)
+            except ValueError:
+                return Response({"error": "min_price and max_price must be integers."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+            channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+            stub = server_services_pb2_grpc.CarServiceStub(channel)
+
+            try:
+                response = stub.GetCarsByPriceRange(
+                    server_services_pb2.GetCarsByPriceRangeRequest(min_price=min_price, max_price=max_price)
+                )
+                cars = [
+                    {
+                        "vin": car.vin,
+                        "condition": car.condition,
+                        "odometer": car.odometer,
+                        "mmr": car.mmr,
+                        "specifications": {
+                            "year": car.specifications.year,
+                            "make": car.specifications.make,
+                            "model": car.specifications.model,
+                            "trim": car.specifications.trim,
+                            "body": car.specifications.body,
+                            "transmission": car.specifications.transmission,
+                            "color": car.specifications.color,
+                            "interior": car.specifications.interior,
+                        },
+                        "seller_name": car.seller_name,
+                        "seller_state": car.seller_state,
+                        "seller_coordinates": {
+                            "latitude": car.seller_coordinates.latitude,
+                            "longitude": car.seller_coordinates.longitude,
+                        },
+                        "sale_date": car.sale_date,
+                        "selling_price": car.selling_price,
+                    }
+                    for car in response.cars
+                ]
+                return Response(cars, status=status.HTTP_200_OK)
+            except grpc.RpcError as e:
+                return Response({"error": f"gRPC call failed: {e.details()}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetCarsByYearConditionView(APIView):
+        def get(self, request):
+            """
+            Filters cars by year and condition.
+            """
+            year = request.query_params.get("year")
+            condition = request.query_params.get("condition")
+
+            if not year or not condition:
+                return Response({"error": "year and condition are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                year = int(year)
+                condition = int(condition)
+            except ValueError:
+                return Response({"error": "year and condition must be integers."}, status=status.HTTP_400_BAD_REQUEST)
+
+            channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+            stub = server_services_pb2_grpc.CarServiceStub(channel)
+
+            try:
+                response = stub.GetCarsByYearCondition(
+                    server_services_pb2.GetCarsByYearConditionRequest(year=year, condition=condition)
+                )
+                cars = [
+                    {
+                        "vin": car.vin,
+                        "condition": car.condition,
+                        "odometer": car.odometer,
+                        "mmr": car.mmr,
+                        "specifications": {
+                            "year": car.specifications.year,
+                            "make": car.specifications.make,
+                            "model": car.specifications.model,
+                            "trim": car.specifications.trim,
+                            "body": car.specifications.body,
+                            "transmission": car.specifications.transmission,
+                            "color": car.specifications.color,
+                            "interior": car.specifications.interior,
+                        },
+                        "seller_name": car.seller_name,
+                        "seller_state": car.seller_state,
+                        "seller_coordinates": {
+                            "latitude": car.seller_coordinates.latitude,
+                            "longitude": car.seller_coordinates.longitude,
+                        },
+                        "sale_date": car.sale_date,
+                        "selling_price": car.selling_price,
+                    }
+                    for car in response.cars
+                ]
+                return Response(cars, status=status.HTTP_200_OK)
+            except grpc.RpcError as e:
+                return Response({"error": f"gRPC call failed: {e.details()}"},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)

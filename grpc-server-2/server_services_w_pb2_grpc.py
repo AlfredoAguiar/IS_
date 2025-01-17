@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import server_services_pb2 as server__services__pb2
+import server_services_w_pb2 as server__services__w__pb2
 
 GRPC_GENERATED_VERSION = '1.69.0'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +18,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in server_services_pb2_grpc.py depends on'
+        + f' but the generated code in server_services_w_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -37,18 +37,18 @@ class WeatherServiceStub(object):
         """
         self.GetWeatherByRegion = channel.unary_unary(
                 '/weather.WeatherService/GetWeatherByRegion',
-                request_serializer=server__services__pb2.GetWeatherByRegionRequest.SerializeToString,
-                response_deserializer=server__services__pb2.GetWeatherByRegionResponse.FromString,
+                request_serializer=server__services__w__pb2.GetWeatherByRegionRequest.SerializeToString,
+                response_deserializer=server__services__w__pb2.GetWeatherByRegionResponse.FromString,
                 _registered_method=True)
         self.GetWeatherByLocation = channel.unary_unary(
                 '/weather.WeatherService/GetWeatherByLocation',
-                request_serializer=server__services__pb2.GetWeatherByLocationRequest.SerializeToString,
-                response_deserializer=server__services__pb2.GetWeatherByLocationResponse.FromString,
+                request_serializer=server__services__w__pb2.GetWeatherByLocationRequest.SerializeToString,
+                response_deserializer=server__services__w__pb2.GetWeatherByLocationResponse.FromString,
                 _registered_method=True)
         self.GetWeatherByDateRange = channel.unary_unary(
                 '/weather.WeatherService/GetWeatherByDateRange',
-                request_serializer=server__services__pb2.GetWeatherByDateRangeRequest.SerializeToString,
-                response_deserializer=server__services__pb2.GetWeatherByDateRangeResponse.FromString,
+                request_serializer=server__services__w__pb2.GetWeatherByDateRangeRequest.SerializeToString,
+                response_deserializer=server__services__w__pb2.GetWeatherByDateRangeResponse.FromString,
                 _registered_method=True)
 
 
@@ -79,18 +79,18 @@ def add_WeatherServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetWeatherByRegion': grpc.unary_unary_rpc_method_handler(
                     servicer.GetWeatherByRegion,
-                    request_deserializer=server__services__pb2.GetWeatherByRegionRequest.FromString,
-                    response_serializer=server__services__pb2.GetWeatherByRegionResponse.SerializeToString,
+                    request_deserializer=server__services__w__pb2.GetWeatherByRegionRequest.FromString,
+                    response_serializer=server__services__w__pb2.GetWeatherByRegionResponse.SerializeToString,
             ),
             'GetWeatherByLocation': grpc.unary_unary_rpc_method_handler(
                     servicer.GetWeatherByLocation,
-                    request_deserializer=server__services__pb2.GetWeatherByLocationRequest.FromString,
-                    response_serializer=server__services__pb2.GetWeatherByLocationResponse.SerializeToString,
+                    request_deserializer=server__services__w__pb2.GetWeatherByLocationRequest.FromString,
+                    response_serializer=server__services__w__pb2.GetWeatherByLocationResponse.SerializeToString,
             ),
             'GetWeatherByDateRange': grpc.unary_unary_rpc_method_handler(
                     servicer.GetWeatherByDateRange,
-                    request_deserializer=server__services__pb2.GetWeatherByDateRangeRequest.FromString,
-                    response_serializer=server__services__pb2.GetWeatherByDateRangeResponse.SerializeToString,
+                    request_deserializer=server__services__w__pb2.GetWeatherByDateRangeRequest.FromString,
+                    response_serializer=server__services__w__pb2.GetWeatherByDateRangeResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -119,8 +119,8 @@ class WeatherService(object):
             request,
             target,
             '/weather.WeatherService/GetWeatherByRegion',
-            server__services__pb2.GetWeatherByRegionRequest.SerializeToString,
-            server__services__pb2.GetWeatherByRegionResponse.FromString,
+            server__services__w__pb2.GetWeatherByRegionRequest.SerializeToString,
+            server__services__w__pb2.GetWeatherByRegionResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -146,8 +146,8 @@ class WeatherService(object):
             request,
             target,
             '/weather.WeatherService/GetWeatherByLocation',
-            server__services__pb2.GetWeatherByLocationRequest.SerializeToString,
-            server__services__pb2.GetWeatherByLocationResponse.FromString,
+            server__services__w__pb2.GetWeatherByLocationRequest.SerializeToString,
+            server__services__w__pb2.GetWeatherByLocationResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -173,8 +173,8 @@ class WeatherService(object):
             request,
             target,
             '/weather.WeatherService/GetWeatherByDateRange',
-            server__services__pb2.GetWeatherByDateRangeRequest.SerializeToString,
-            server__services__pb2.GetWeatherByDateRangeResponse.FromString,
+            server__services__w__pb2.GetWeatherByDateRangeRequest.SerializeToString,
+            server__services__w__pb2.GetWeatherByDateRangeResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -198,13 +198,13 @@ class SendFileServiceStub(object):
         """
         self.SendFile = channel.unary_unary(
                 '/weather.SendFileService/SendFile',
-                request_serializer=server__services__pb2.SendFileRequestBody.SerializeToString,
-                response_deserializer=server__services__pb2.SendFileResponseBody.FromString,
+                request_serializer=server__services__w__pb2.SendFileRequestBody.SerializeToString,
+                response_deserializer=server__services__w__pb2.SendFileResponseBody.FromString,
                 _registered_method=True)
         self.SendFileChunks = channel.stream_unary(
                 '/weather.SendFileService/SendFileChunks',
-                request_serializer=server__services__pb2.SendFileChunksRequest.SerializeToString,
-                response_deserializer=server__services__pb2.SendFileChunksResponse.FromString,
+                request_serializer=server__services__w__pb2.SendFileChunksRequest.SerializeToString,
+                response_deserializer=server__services__w__pb2.SendFileChunksResponse.FromString,
                 _registered_method=True)
 
 
@@ -231,13 +231,13 @@ def add_SendFileServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SendFile': grpc.unary_unary_rpc_method_handler(
                     servicer.SendFile,
-                    request_deserializer=server__services__pb2.SendFileRequestBody.FromString,
-                    response_serializer=server__services__pb2.SendFileResponseBody.SerializeToString,
+                    request_deserializer=server__services__w__pb2.SendFileRequestBody.FromString,
+                    response_serializer=server__services__w__pb2.SendFileResponseBody.SerializeToString,
             ),
             'SendFileChunks': grpc.stream_unary_rpc_method_handler(
                     servicer.SendFileChunks,
-                    request_deserializer=server__services__pb2.SendFileChunksRequest.FromString,
-                    response_serializer=server__services__pb2.SendFileChunksResponse.SerializeToString,
+                    request_deserializer=server__services__w__pb2.SendFileChunksRequest.FromString,
+                    response_serializer=server__services__w__pb2.SendFileChunksResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -266,8 +266,8 @@ class SendFileService(object):
             request,
             target,
             '/weather.SendFileService/SendFile',
-            server__services__pb2.SendFileRequestBody.SerializeToString,
-            server__services__pb2.SendFileResponseBody.FromString,
+            server__services__w__pb2.SendFileRequestBody.SerializeToString,
+            server__services__w__pb2.SendFileResponseBody.FromString,
             options,
             channel_credentials,
             insecure,
@@ -293,8 +293,8 @@ class SendFileService(object):
             request_iterator,
             target,
             '/weather.SendFileService/SendFileChunks',
-            server__services__pb2.SendFileChunksRequest.SerializeToString,
-            server__services__pb2.SendFileChunksResponse.FromString,
+            server__services__w__pb2.SendFileChunksRequest.SerializeToString,
+            server__services__w__pb2.SendFileChunksResponse.FromString,
             options,
             channel_credentials,
             insecure,

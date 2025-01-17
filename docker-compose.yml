@@ -61,6 +61,8 @@ services:
     environment:
       - GRPC_PORT=50051
       - GRPC_HOST=grpc-server
+      - GRPC_PORT_2=50053
+      - GRPC_HOST_2=grpc-server-2
       - DBNAME=mydatabase
       - DBUSERNAME=myuser
       - DBPASSWORD=mypassword
@@ -69,6 +71,7 @@ services:
     depends_on:
       - db
       - grpc-server
+      - grpc-server-2
     networks:
       - app-network
 

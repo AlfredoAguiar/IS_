@@ -133,4 +133,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GRPC_HOST = os.getenv('GRPC_HOST', 'localhost')
 GRPC_PORT = os.getenv('GRPC_PORT', '50051')
-
+GRPC_HOST_2 = os.getenv('GRPC_HOST_2', 'localhost')
+GRPC_PORT_2 = os.getenv('GRPC_PORT_2', '50053')

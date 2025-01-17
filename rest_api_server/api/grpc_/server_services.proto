@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package cars;
+
+// Message representing the coordinates of a location.
+message Coordinates {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+// Message representing car specifications.
+message Specifications {
+  int32 year = 1;
+  string make = 2;
+  string model = 3;
+  string trim = 4;
+  string body = 5;
+  string transmission = 6;
+  string color = 7;
+  string interior = 8;
+}
+
+// Message representing a car.
+message Car {
+  string vin = 1;
+  int32 condition = 2;
+  int32 odometer = 3;
+  int32 mmr = 4; // Market value
+  Specifications specifications = 5;
+  string seller_name = 6;
+  string seller_state = 7;
+  Coordinates seller_coordinates = 8;
+  string sale_date = 9; // Format: Tue Dec 16 2014 12:30:00 GMT-0800 (PST)
+  int32 selling_price = 10;
+}
+
+// Query to get all cars.
+message GetAllCarsRequest {}
+message GetAllCarsResponse {
+  repeated Car cars = 1;
+}
+
+// Query to filter cars by make and model.
+message GetCarsByMakeModelRequest {
+  string make = 1;
+  string model = 2;
+}
+message GetCarsByMakeModelResponse {
+  repeated Car cars = 1;
+}
+
+
+// Query to retrieve cars within a price range.
+message GetCarsByPriceRangeRequest {
+  int32 min_price = 1;
+  int32 max_price = 2;
+}
+message GetCarsByPriceRangeResponse {
+  repeated Car cars = 1;
+}
+
+// Query to filter cars by year and condition.
+message GetCarsByYearConditionRequest {
+  int32 year = 1;
+  int32 condition = 2;
+}
+message GetCarsByYearConditionResponse {
+  repeated Car cars = 1;
+}
+
+// Request message for sending a file
+message SendFileRequestBody {
+  bytes file = 1;  // File content as bytes
+  string file_name = 2;  // File name (optional)
+}
+
+// Response message for sending a file
+message SendFileResponseBody {
+  bool success = 1;  // Indicates whether the operation was successful
+  string message = 2;  // Status message
+}
+
+// Request message for sending file chunks
+message SendFileChunksRequest {
+  bytes data = 1;  // Chunk of the file
+  string file_name = 2;  // File name (optional, sent in the first chunk or metadata)
+}
+
+// Response message for sending file chunks
+message SendFileChunksResponse {
+  bool success = 1;  // Indicates if the upload was successful
+  string message = 2;  // Additional status message
+}
+
+// Service definition for car-related operations
+service CarService {
+  rpc GetAllCars (GetAllCarsRequest) returns (GetAllCarsResponse);
+  rpc GetCarsByMakeModel (GetCarsByMakeModelRequest) returns (GetCarsByMakeModelResponse);
+  rpc GetCarsByPriceRange (GetCarsByPriceRangeRequest) returns (GetCarsByPriceRangeResponse);
+  rpc GetCarsByYearCondition (GetCarsByYearConditionRequest) returns (GetCarsByYearConditionResponse);
+}
+
+// Service definition for file sending operations
+service SendFileService {
+  rpc SendFile (SendFileRequestBody) returns (SendFileResponseBody);
+  rpc SendFileChunks (stream SendFileChunksRequest) returns (SendFileChunksResponse);
+}

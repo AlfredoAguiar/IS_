@@ -8,8 +8,8 @@ from xmlLocalização.CityCoordinatesUpdater import CityCoordinatesUpdater
 from xmlLocalização.loc_states import XMLLocationUpdater
 from xmlGeneration.csv_to_xml_converter_Temp import CSVtoXMLConverter
 from xmlValidate.validate_xml import validate_xml
-import server_services_pb2_grpc
-import server_services_pb2
+import server_services_w_pb2_grpc as server_services_pb2_grpc
+import server_services_w_pb2 as server_services_pb2
 from settings import GRPC_SERVER_PORT, MAX_WORKERS, MEDIA_PATH, DBNAME, DBUSERNAME, DBPASSWORD, DBHOST, DBPORT
 from datetime import datetime
 from xml.etree import ElementTree as ET
