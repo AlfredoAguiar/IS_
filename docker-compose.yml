@@ -77,7 +77,39 @@ services:
 
 
   # RabbitMQ Server
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app-network
 
+  worker:
+    build: worker-rabbit-csv
+    container_name: worker
+    ports:
+      - "8003:8003"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=user
+      - RABBITMQ_PW=password
+      - DBNAME=mydatabase
+      - DBUSERNAME=myuser
+      - DBPASSWORD=mypassword
+      - DBHOST=db
+      - DBPORT=5432
+    depends_on:
+      - rabbitmq
+      - db
+      - grpc-server
+    networks:
+      - app-network
   # PostgreSQL Database
   db:
     image: postgres:latest
@@ -87,7 +119,7 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydatabase
     ports:
-      - "5433:5432"   # Map PostgreSQL port on the host
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
