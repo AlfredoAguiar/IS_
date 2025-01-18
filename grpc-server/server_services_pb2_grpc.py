@@ -55,6 +55,11 @@ class CarServiceStub(object):
                 request_serializer=server__services__pb2.GetCarsByYearConditionRequest.SerializeToString,
                 response_deserializer=server__services__pb2.GetCarsByYearConditionResponse.FromString,
                 _registered_method=True)
+        self.AddCar = channel.unary_unary(
+                '/cars.CarService/AddCar',
+                request_serializer=server__services__pb2.AddCarRequest.SerializeToString,
+                response_deserializer=server__services__pb2.AddCarResponse.FromString,
+                _registered_method=True)
 
 
 class CarServiceServicer(object):
@@ -85,6 +90,13 @@ class CarServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def AddCar(self, request, context):
+        """AddCar RPC
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_CarServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -107,6 +119,11 @@ def add_CarServiceServicer_to_server(servicer, server):
                     servicer.GetCarsByYearCondition,
                     request_deserializer=server__services__pb2.GetCarsByYearConditionRequest.FromString,
                     response_serializer=server__services__pb2.GetCarsByYearConditionResponse.SerializeToString,
+            ),
+            'AddCar': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddCar,
+                    request_deserializer=server__services__pb2.AddCarRequest.FromString,
+                    response_serializer=server__services__pb2.AddCarResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -228,6 +245,33 @@ class CarService(object):
             metadata,
             _registered_method=True)
 
+    @staticmethod
+    def AddCar(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/cars.CarService/AddCar',
+            server__services__pb2.AddCarRequest.SerializeToString,
+            server__services__pb2.AddCarResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
 
 class SendFileServiceStub(object):
     """Service definition for file sending operations
@@ -336,6 +380,254 @@ class SendFileService(object):
             '/cars.SendFileService/SendFileChunks',
             server__services__pb2.SendFileChunksRequest.SerializeToString,
             server__services__pb2.SendFileChunksResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class CarServiceDatabaseStub(object):
+    """Service definition for car database operations
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.GetAllCars = channel.unary_unary(
+                '/cars.CarServiceDatabase/GetAllCars',
+                request_serializer=server__services__pb2.GetAllCarsRequest.SerializeToString,
+                response_deserializer=server__services__pb2.GetAllCarsResponse.FromString,
+                _registered_method=True)
+        self.AddCar = channel.unary_unary(
+                '/cars.CarServiceDatabase/AddCar',
+                request_serializer=server__services__pb2.AddCarRequest.SerializeToString,
+                response_deserializer=server__services__pb2.AddCarResponse.FromString,
+                _registered_method=True)
+        self.UpdateCar = channel.unary_unary(
+                '/cars.CarServiceDatabase/UpdateCar',
+                request_serializer=server__services__pb2.UpdateCarRequest.SerializeToString,
+                response_deserializer=server__services__pb2.UpdateCarResponse.FromString,
+                _registered_method=True)
+        self.DeleteCar = channel.unary_unary(
+                '/cars.CarServiceDatabase/DeleteCar',
+                request_serializer=server__services__pb2.DeleteCarRequest.SerializeToString,
+                response_deserializer=server__services__pb2.DeleteCarResponse.FromString,
+                _registered_method=True)
+        self.GetCarByVin = channel.unary_unary(
+                '/cars.CarServiceDatabase/GetCarByVin',
+                request_serializer=server__services__pb2.GetCarByVinRequest.SerializeToString,
+                response_deserializer=server__services__pb2.GetCarByVinResponse.FromString,
+                _registered_method=True)
+
+
+class CarServiceDatabaseServicer(object):
+    """Service definition for car database operations
+    """
+
+    def GetAllCars(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddCar(self, request, context):
+        """AddCar RPC
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateCar(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteCar(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetCarByVin(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_CarServiceDatabaseServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'GetAllCars': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAllCars,
+                    request_deserializer=server__services__pb2.GetAllCarsRequest.FromString,
+                    response_serializer=server__services__pb2.GetAllCarsResponse.SerializeToString,
+            ),
+            'AddCar': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddCar,
+                    request_deserializer=server__services__pb2.AddCarRequest.FromString,
+                    response_serializer=server__services__pb2.AddCarResponse.SerializeToString,
+            ),
+            'UpdateCar': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateCar,
+                    request_deserializer=server__services__pb2.UpdateCarRequest.FromString,
+                    response_serializer=server__services__pb2.UpdateCarResponse.SerializeToString,
+            ),
+            'DeleteCar': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteCar,
+                    request_deserializer=server__services__pb2.DeleteCarRequest.FromString,
+                    response_serializer=server__services__pb2.DeleteCarResponse.SerializeToString,
+            ),
+            'GetCarByVin': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCarByVin,
+                    request_deserializer=server__services__pb2.GetCarByVinRequest.FromString,
+                    response_serializer=server__services__pb2.GetCarByVinResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'cars.CarServiceDatabase', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('cars.CarServiceDatabase', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class CarServiceDatabase(object):
+    """Service definition for car database operations
+    """
+
+    @staticmethod
+    def GetAllCars(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/cars.CarServiceDatabase/GetAllCars',
+            server__services__pb2.GetAllCarsRequest.SerializeToString,
+            server__services__pb2.GetAllCarsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddCar(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/cars.CarServiceDatabase/AddCar',
+            server__services__pb2.AddCarRequest.SerializeToString,
+            server__services__pb2.AddCarResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateCar(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/cars.CarServiceDatabase/UpdateCar',
+            server__services__pb2.UpdateCarRequest.SerializeToString,
+            server__services__pb2.UpdateCarResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteCar(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/cars.CarServiceDatabase/DeleteCar',
+            server__services__pb2.DeleteCarRequest.SerializeToString,
+            server__services__pb2.DeleteCarResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetCarByVin(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/cars.CarServiceDatabase/GetCarByVin',
+            server__services__pb2.GetCarByVinRequest.SerializeToString,
+            server__services__pb2.GetCarByVinResponse.FromString,
             options,
             channel_credentials,
             insecure,

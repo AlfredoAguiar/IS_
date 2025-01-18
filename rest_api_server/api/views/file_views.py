@@ -313,3 +313,160 @@ class GetCarsByYearConditionView(APIView):
             except grpc.RpcError as e:
                 return Response({"error": f"gRPC call failed: {e.details()}"},
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetCarByVinView(APIView):
+    def get(self, request):
+        vin = request.query_params.get("vin")
+        if not vin or len(vin) != 17:
+            return Response({"error": "VIN must be a 17-character string."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Connect to the gRPC service
+        channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+        stub = server_services_pb2_grpc.CarServiceDatabaseStub(channel)
+
+        try:
+            # Send the request to gRPC service
+            response = stub.GetCarByVin(server_services_pb2.GetCarByVinRequest(vin=vin))
+
+            if not response.car:
+                return Response({"error": "Car not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Extract the car details from the gRPC response
+            car = {
+                "vin": response.car.vin,
+                "condition": response.car.condition,
+                "odometer": response.car.odometer,
+                "mmr": response.car.mmr,
+                "specifications": {
+                    "year": response.car.specifications.year,
+                    "make": response.car.specifications.make,
+                    "model": response.car.specifications.model,
+                    "trim": response.car.specifications.trim,
+                    "body": response.car.specifications.body,
+                    "transmission": response.car.specifications.transmission,
+                },
+                "seller_name": response.car.seller_name,
+                "seller_state": response.car.seller_state,
+                "sale_date": response.car.sale_date,
+                "selling_price": response.car.selling_price,
+                "seller_coordinates": {
+                    "latitude": response.car.seller_coordinates.latitude,
+                    "longitude": response.car.seller_coordinates.longitude,
+                }
+            }
+
+            return Response(car, status=status.HTTP_200_OK)
+
+        except grpc.RpcError as e:
+            return Response({"error": f"gRPC call failed: {e.details()}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class UpdateCarView(APIView):
+    def put(self, request):
+        vin = request.data.get("vin")
+        if not vin or len(vin) != 17:
+            return Response({"error": "VIN must be a 17-character string."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Prepare the data to send to the gRPC service
+        update_data = server_services_pb2.UpdateCarRequest(
+            vin=vin,
+            condition=request.data.get("condition"),
+            odometer=request.data.get("odometer"),
+            color=request.data.get("color", ""),
+            interior=request.data.get("interior", ""),
+            mmr=request.data.get("mmr"),
+            specifications=server_services_pb2.Specifications(
+                year=request.data.get("year"),
+                make=request.data.get("make"),
+                model=request.data.get("model"),
+                trim=request.data.get("trim"),
+                body=request.data.get("body"),
+                transmission=request.data.get("transmission")
+            ),
+            seller_name=request.data.get("seller_name"),
+            seller_state=request.data.get("seller_state"),
+            sale_date=request.data.get("sale_date"),
+            selling_price=request.data.get("selling_price"),
+            city=request.data.get("city"),
+            latitude=request.data.get("latitude"),
+            longitude=request.data.get("longitude")
+        )
+
+        # Connect to the gRPC service
+        channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+        stub = server_services_pb2_grpc.CarServiceDatabaseStub(channel)
+
+        try:
+            # Send the update request to the gRPC service
+            response = stub.UpdateCar(update_data)
+
+            if response.success:
+                return Response({"message": "Car updated successfully."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": response.message}, status=status.HTTP_400_BAD_REQUEST)
+
+        except grpc.RpcError as e:
+            return Response({"error": f"gRPC call failed: {e.details()}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class DeleteCarView(APIView):
+    def delete(self, request):
+        vin = request.data.get("vin")
+        if not vin or len(vin) != 17:
+            return Response({"error": "VIN must be a 17-character string."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Connect to the gRPC service
+        channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+        stub = server_services_pb2_grpc.CarServiceDatabaseStub(channel)
+
+        try:
+            # Send the delete request to the gRPC service
+            response = stub.DeleteCar(server_services_pb2.DeleteCarRequest(vin=vin))
+
+            if response.success:
+                return Response({"message": "Car deleted successfully."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": response.message}, status=status.HTTP_400_BAD_REQUEST)
+
+        except grpc.RpcError as e:
+            return Response({"error": f"gRPC call failed: {e.details()}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetAllCarsView_2(APIView):
+    def get(self, request):
+        channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+        stub = server_services_pb2_grpc.CarServiceDatabaseStub(channel)
+
+        try:
+            response = stub.GetAllCars(server_services_pb2.GetAllCarsRequest())
+
+            cars = [
+                {
+                    "vin": car.vin,
+                    "condition": car.condition,
+                    "odometer": car.odometer,
+                    "mmr": car.mmr,
+                    "specifications": {
+                        "year": car.specifications.year,
+                        "make": car.specifications.make,
+                        "model": car.specifications.model,
+                        "trim": car.specifications.trim,
+                        "body": car.specifications.body,
+                        "transmission": car.specifications.transmission,
+                    },
+                    "seller_name": car.seller_name,
+                    "seller_state": car.seller_state,
+                    "sale_date": car.sale_date,
+                    "selling_price": car.selling_price,
+                    "seller_coordinates": {
+                        "latitude": car.seller_coordinates.latitude,
+                        "longitude": car.seller_coordinates.longitude,
+                    }
+                }
+                for car in response.cars
+            ]
+
+
+            return Response(cars, status=status.HTTP_200_OK)
+
+        except grpc.RpcError as e:
+
+            return Response({"error": f"gRPC call failed: {e.details()}"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
