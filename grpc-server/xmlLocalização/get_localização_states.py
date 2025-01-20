@@ -23,26 +23,26 @@ class StateCoordinatesUpdater:
         self.output_path = output_path
 
     def get_coordinates(self, state_abbr):
-        """
-        Obtém as coordenadas de latitude e longitude para um estado utilizando a API Nominatim do OpenStreetMap.
-        """
+
+        #Obtém as coordenadas de latitude e longitude para um estado utilizando a API Nominatim do OpenStreetMap.
+
         state_name = state_abbreviations.get(state_abbr.upper(), state_abbr)
 
         base_url = "https://nominatim.openstreetmap.org/search"
         params = {
-            'q': state_name,  # Parâmetro de consulta para o estado
-            'format': 'json',  # Formato JSON para a resposta
-            'addressdetails': 1,  # Detalhes do endereço
-            'limit': 1,  # Limita o número de resultados
-            'countrycodes': 'US'  # Limita os resultados aos Estados Unidos
+            'q': state_name,
+            'format': 'json',
+            'addressdetails': 1,
+            'limit': 1,
+            'countrycodes': 'US'
         }
         headers = {
-            'User-Agent': 'YourProjectName/1.0 (your_email@example.com)'  # Modifique conforme necessário
+            'User-Agent': 'YourProjectName/1.0 (your_email@example.com)'
         }
 
         try:
             response = requests.get(base_url, params=params, headers=headers,
-                                    timeout=20)  # Aumentando o timeout para 20 segundos
+                                    timeout=20)
             response.raise_for_status()  # Verifica se a requisição foi bem-sucedida
 
             data = response.json()
@@ -63,9 +63,9 @@ class StateCoordinatesUpdater:
             return None, None
 
     def update_xml_with_coordinates(self):
-        """
-        Atualiza o arquivo XML com as coordenadas de latitude e longitude de cada estado.
-        """
+
+        #Atualiza o arquivo XML com as coordenadas de latitude e longitude de cada estado.
+
         if not os.path.exists(self.input_path):
             print(f"Input file {self.input_path} not found.")
             return

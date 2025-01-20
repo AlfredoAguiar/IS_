@@ -33,5 +33,4 @@ class Car:
         ET.SubElement(seller_el, "SaleDate").text = self.seller.sale_date
         ET.SubElement(seller_el, "SellingPrice").text = self.seller.selling_price
 
-
         return car_el

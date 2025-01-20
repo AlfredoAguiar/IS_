@@ -11,7 +11,7 @@
             <xs:sequence>
               <xs:element name="VIN" type="xs:string" />
 
-              <xs:element name="Condition" type="xs:int" />
+              <xs:element name="Condition" type="xs:string" nillable="true" />
 
               <xs:element name="Odometer" type="xs:int" />
 
@@ -36,27 +36,29 @@
                 <xs:complexType>
                   <xs:sequence>
                     <xs:element name="Name" type="xs:string" />
-
-                     <xs:element name="State">
-                      <xs:complexType mixed="true">
-                        <xs:sequence>
-                          <xs:element name="Coordinates">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="Latitude" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
-                                <xs:element name="Longitude" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                        </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                    <!-- Sale date and price -->
+                    <xs:element name="State" type="xs:string" />
                     <xs:element name="SaleDate" type="xs:string" minOccurs="1" maxOccurs="1"/>
                     <xs:element name="SellingPrice" type="xs:int" minOccurs="1" maxOccurs="1"/>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
+
+              <xs:element name="Location">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="City" type="xs:string" />
+                    <xs:element name="Coordinates">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Latitude" type="xs:decimal" />
+                          <xs:element name="Longitude" type="xs:decimal" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -45,7 +45,6 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
                 database=DBNAME
             )
             cursor = conn.cursor()
-            # Read and execute the SQL for table creation
             sql_file_path = 'createTablesCar.sql'
             with open(sql_file_path, 'r') as file:
                 sql_queries = file.read()
@@ -73,12 +72,12 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             logger.error(f"Error processing unique states in XML: {str(e)}", exc_info=True)
             raise e
 
-    def update_locations_in_xml(self, xml_file_path, xml_US_path, xml_Cord_path):
+    def update_locations_in_xml(self, xml_file_path, xml_final, xml_Cord_path):
         try:
             location_updater = XMLLocationUpdater(
                 cars_file=xml_file_path,
-                coordinates_file=xml_US_path,
-                output_file=xml_Cord_path
+                coordinates_file=xml_Cord_path,
+                output_file=xml_final
             )
             location_updater.update_locations()
             logger.info("Locations updated and saved in the XML file.")
@@ -86,11 +85,11 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             logger.error(f"Error adding location data or saving XML: {str(e)}", exc_info=True)
             raise e
 
-    def update_coordinates_in_xml(self, xml_file_path, xml_Final):
+    def update_coordinates_in_xml(self, xml_US_path, xml_Cord_path):
         try:
             coordinates_updater = StateCoordinatesUpdater(
-                input_path=xml_file_path,
-                output_path=xml_Final
+                input_path=xml_US_path,
+                output_path= xml_Cord_path
             )
             coordinates_updater.update_xml_with_coordinates()
             logger.info("Final XML file generated with updated coordinates.")
@@ -133,11 +132,11 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             # Process unique states in the generated XML
             self.process_unique_states(xml_file_path, xml_US_path)
 
-            # Update locations in the XML file
-            self.update_locations_in_xml(xml_file_path, xml_US_path, xml_Cord_path)
-
             # Update coordinates in the XML file
-            self.update_coordinates_in_xml(xml_file_path, xml_Final)
+            self.update_coordinates_in_xml(xml_US_path, xml_Cord_path)
+
+            # Update locations in the XML file
+            self.update_locations_in_xml(xml_file_path, xml_Final, xml_Cord_path)
 
             # Validate the generated XML file
             if not self.validate_xml_file(xml_Final, context):
@@ -186,11 +185,9 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             # Process unique states in the generated XML
             self.process_unique_states(xml_file_path, xml_US_path)
 
-            # Update locations in the XML file
-            self.update_locations_in_xml(xml_file_path, xml_US_path, xml_Cord_path)
+            self.update_coordinates_in_xml(xml_US_path, xml_Cord_path)
 
-            # Update coordinates in the XML file
-            self.update_coordinates_in_xml(xml_file_path, xml_Final)
+            self.update_locations_in_xml(xml_file_path, xml_Final, xml_Cord_path)
 
             # Validate the generated XML file
             if not self.validate_xml_file(xml_Final, context):
@@ -250,7 +247,11 @@ class CarService(server_services_pb2_grpc.CarServiceServicer):
 
             for car_elem in root.findall('Car'):
                 vin = car_elem.find('VIN').text
-                condition = car_elem.find('Condition').text
+                condition_elem = car_elem.find('Condition')
+                if condition_elem is not None and condition_elem.text:
+                    condition = int(condition_elem.text)
+                else:
+                    condition = 0
                 odometer = car_elem.find('Odometer').text
                 mmr = car_elem.find('MMR').text
 
@@ -272,11 +273,11 @@ class CarService(server_services_pb2_grpc.CarServiceServicer):
                 seller_name = seller_elem.find('Name').text
                 seller_state = seller_elem.find('State').text
 
-                # Extracting Coordinates from <State> inside <Seller>
-                latitude = float(seller_elem.find('./State/Coordinates/Latitude').text)
-                longitude = float(seller_elem.find('./State/Coordinates/Longitude').text)
 
-                # Extracting Sale Date and Selling Price
+                latitude = float(car_elem.find('./Location/Coordinates/Latitude').text)
+                longitude = float(car_elem.find('./Location/Coordinates/Latitude').text)
+
+
                 sale_date = seller_elem.find('SaleDate').text
                 selling_price = int(seller_elem.find('SellingPrice').text)
 
@@ -309,7 +310,7 @@ class CarService(server_services_pb2_grpc.CarServiceServicer):
 
     def GetAllCars(self, request, context):
         try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
+            cars = self.process_file(os.path.join(MEDIA_PATH, "car_prices.csv.xmlFinal"), context)
             return server_services_pb2.GetAllCarsResponse(cars=cars)
         except Exception as e:
             context.set_details(f"Error fetching cars: {str(e)}")
@@ -318,7 +319,7 @@ class CarService(server_services_pb2_grpc.CarServiceServicer):
 
     def GetCarsByMakeModel(self, request, context):
         try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
+            cars = self.process_file(os.path.join(MEDIA_PATH, "car_prices.csv.xmlFinal"), context)
             filtered_cars = [car for car in cars if
                              car.specifications.make == request.make and car.specifications.model == request.model]
             return server_services_pb2.GetCarsByMakeModelResponse(cars=filtered_cars)
@@ -331,7 +332,7 @@ class CarService(server_services_pb2_grpc.CarServiceServicer):
 
     def GetCarsByPriceRange(self, request, context):
         try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
+            cars = self.process_file(os.path.join(MEDIA_PATH, "car_prices.csv.xmlFinal"), context)
             filtered_cars = [car for car in cars if request.min_price <= car.selling_price <= request.max_price]
             return server_services_pb2.GetCarsByPriceRangeResponse(cars=filtered_cars)
         except Exception as e:
@@ -341,7 +342,7 @@ class CarService(server_services_pb2_grpc.CarServiceServicer):
 
     def GetCarsByYearCondition(self, request, context):
         try:
-            cars = self.process_file(os.path.join(MEDIA_PATH, ".csv.xmlFinal"), context)
+            cars = self.process_file(os.path.join(MEDIA_PATH, "car_prices.csv.xmlFinal"), context)
             filtered_cars = [car for car in cars if
                              car.specifications.year == request.year and car.condition == request.condition]
             return server_services_pb2.GetCarsByYearConditionResponse(cars=filtered_cars)

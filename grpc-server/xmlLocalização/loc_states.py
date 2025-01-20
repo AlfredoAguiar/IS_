@@ -10,9 +10,6 @@ class XMLLocationUpdater:
         self.output_file = output_file
 
     def add_location_to_car(self, car, city, latitude, longitude):
-        """
-        Adds location information (city, latitude, longitude) to a car.
-        """
         loc = ET.SubElement(car, "Location")
         city_element = ET.SubElement(loc, "City")
         city_element.text = city

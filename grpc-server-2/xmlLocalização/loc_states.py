@@ -9,9 +9,7 @@ class XMLLocationUpdater:
         self.output_file = output_file
 
     def add_location_to_car(self, car, city, latitude, longitude):
-        """
-        Adds location information (city, latitude, longitude) to a car.
-        """
+
         loc = ET.SubElement(car, "Location")
         city_element = ET.SubElement(loc, "City")
         city_element.text = city
@@ -23,9 +21,7 @@ class XMLLocationUpdater:
         longitude_element.text = f"{longitude:.7f}"
 
     def format_and_save_xml(self, tree):
-        """
-        Formats the XML data to be human-readable and saves it to the output file.
-        """
+
         rough_string = ET.tostring(tree.getroot(), encoding="utf-8")
         reparsed = xml.dom.minidom.parseString(rough_string)
         pretty_xml = reparsed.toprettyxml(indent="  ")
@@ -35,21 +31,17 @@ class XMLLocationUpdater:
             file.write(cleaned_xml)
 
     def update_locations(self):
-        """
-        Update the car XML with location data based on city and coordinates information from the coordinates file.
-        """
+
         try:
-            # Parse the XML files
             cars_tree = ET.parse(self.cars_file)
             cars_root = cars_tree.getroot()
 
             coordinates_tree = ET.parse(self.coordinates_file)
             coordinates_root = coordinates_tree.getroot()
 
-            # Create a mapping of city names to coordinates (latitude, longitude)
             city_coordinates = {}
             for location_element in coordinates_root.findall(".//Location"):
-                city_name = location_element.find("City").text.strip().upper()  # Normalize to uppercase
+                city_name = location_element.find("City").text.strip().upper()
                 coordinates_element = location_element.find("Coordinates")
                 if coordinates_element is not None:
                     try:
@@ -59,11 +51,10 @@ class XMLLocationUpdater:
                     except (AttributeError, ValueError):
                         print(f"Invalid coordinates for city: {city_name}")
 
-            # Add location data to each car based on city
             for car in cars_root.findall(".//Car"):
                 seller_city_element = car.find(".//Seller/City")
                 if seller_city_element is not None:
-                    city_name = seller_city_element.text.strip().upper()  # Normalize to uppercase
+                    city_name = seller_city_element.text.strip().upper()
                     if city_name in city_coordinates:
                         latitude, longitude = city_coordinates[city_name]
                         self.add_location_to_car(car, city_name, latitude, longitude)

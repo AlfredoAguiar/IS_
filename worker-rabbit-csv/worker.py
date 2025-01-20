@@ -4,21 +4,19 @@ import os
 import xml.etree.ElementTree as ET
 import pg8000
 
-# RabbitMQ Configuration
 RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
 RABBITMQ_PORT = int(os.getenv("RABBITMQ_PORT", "5672"))
 RABBITMQ_USER = os.getenv("RABBITMQ_USER", "user")
 RABBITMQ_PW = os.getenv("RABBITMQ_PW", "password")
 QUEUE_NAME = 'xml_final'
 
-# Database Configuration
 DBHOST = os.getenv('DBHOST', 'localhost')
 DBUSERNAME = os.getenv('DBUSERNAME', 'myuser')
 DBPASSWORD = os.getenv('DBPASSWORD', 'mypassword')
 DBNAME = os.getenv('DBNAME', 'mydatabase')
 DBPORT = int(os.getenv('DBPORT', '5432'))
 
-# Configure logging
+
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 logger = logging.getLogger()
@@ -103,9 +101,13 @@ def parse_xml_and_save(xml_content):
     try:
         root = ET.fromstring(xml_content)
         for car in root.findall('Car'):
+            condition_element = car.find('Condition')
+            condition = int(
+                condition_element.text.strip()) if condition_element is not None and condition_element.text and condition_element.text.strip() != "" else 0
             car_data = {
+
                 'VIN': car.find('VIN').text,
-                'Condition': int(car.find('Condition').text),
+                'Condition':condition,
                 'Odometer': int(car.find('Odometer').text),
                 'MMR': int(car.find('MMR').text),
                 'Year': int(car.find('./Specifications/Year').text),
@@ -118,11 +120,12 @@ def parse_xml_and_save(xml_content):
                 'Interior': car.find('./Specifications/Interior').text,
                 'SellerName': car.find('./Seller/Name').text,
                 'State': car.find('./Seller/State').text.strip(),
-                'City': "Unknown",  # Add a default or parse if available
-                'Latitude': float(car.find('./Seller/State/Coordinates/Latitude').text),
-                'Longitude': float(car.find('./Seller/State/Coordinates/Longitude').text),
                 'SaleDate': car.find('./Seller/SaleDate').text,
-                'SellingPrice': int(car.find('./Seller/SellingPrice').text)
+                'SellingPrice': int(car.find('./Seller/SellingPrice').text),
+                'City': car.find('./Location/City').text,
+                'Latitude': float(car.find('./Location/Coordinates/Latitude').text),
+                'Longitude': float(car.find('./Location/Coordinates/Longitude').text),
+
             }
             save_to_database(car_data)
     except Exception as e:

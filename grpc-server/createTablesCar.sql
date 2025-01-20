@@ -2,7 +2,7 @@ Drop table Specifications;
 Drop table Sellers;
 Drop table Locations;
 
--- Create the Cars table
+
 CREATE TABLE IF NOT EXISTS Cars (
     VIN VARCHAR(17) PRIMARY KEY,
     Condition INT,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Cars (
     MMR INT
 );
 
--- Create the Specifications table
+
 CREATE TABLE IF NOT EXISTS Specifications (
     SpecID SERIAL PRIMARY KEY,
     VIN VARCHAR(17) UNIQUE,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Specifications (
     FOREIGN KEY (VIN) REFERENCES Cars(VIN) ON DELETE CASCADE
 );
 
--- Create the Sellers table
+
 CREATE TABLE IF NOT EXISTS Sellers (
     SellerID SERIAL PRIMARY KEY,
     VIN VARCHAR(17) UNIQUE,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Sellers (
     FOREIGN KEY (VIN) REFERENCES Cars(VIN) ON DELETE CASCADE
 );
 
--- Create the Locations table
+
 CREATE TABLE IF NOT EXISTS Locations (
     LocationID SERIAL PRIMARY KEY,
     VIN VARCHAR(17) UNIQUE,

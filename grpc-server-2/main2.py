@@ -71,12 +71,12 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             logger.error(f"Error processing unique states in XML: {str(e)}", exc_info=True)
             raise e
 
-    def update_locations_in_xml(self, xml_file_path, xml_US_path, xml_Cord_path):
+    def update_locations_in_xml(self, xml_file_path, xml_final, xml_Cord_path):
         try:
             location_updater = XMLLocationUpdater(
                 cars_file=xml_file_path,
-                coordinates_file=xml_US_path,
-                output_file=xml_Cord_path
+                coordinates_file=xml_Cord_path,
+                output_file=xml_final
             )
             location_updater.update_locations()
             logger.info("Locations updated and saved in the XML file.")
@@ -84,11 +84,11 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             logger.error(f"Error adding location data or saving XML: {str(e)}", exc_info=True)
             raise e
 
-    def update_coordinates_in_xml(self, xml_file_path, xml_Final):
+    def update_coordinates_in_xml(self, xml_US_path, xml_Cord_path):
         try:
-            coordinates_updater = CityCoordinatesUpdater(
-                input_path=xml_file_path,
-                output_path=xml_Final
+            coordinates_updater = StateCoordinatesUpdater(
+                input_path=xml_US_path,
+                output_path=xml_Cord_path
             )
             coordinates_updater.update_xml_with_coordinates()
             logger.info("Final XML file generated with updated coordinates.")
@@ -133,10 +133,10 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             self.process_unique_states(xml_file_path, xml_US_path)
 
             # Update locations in the XML file
-            self.update_locations_in_xml(xml_file_path, xml_US_path, xml_Cord_path)
+            self.update_coordinates_in_xml(xml_US_path, xml_Cord_path)
 
-            # Update coordinates in the XML file
-            self.update_coordinates_in_xml(xml_file_path, xml_Final)
+            # Update locations in the XML file
+            self.update_locations_in_xml(xml_file_path, xml_Final, xml_Cord_path)
 
             # Validate the generated XML file
             if not self.validate_xml_file(xml_Final, context):
@@ -186,10 +186,10 @@ class SendFileService(server_services_pb2_grpc.SendFileServiceServicer):
             self.process_unique_states(xml_file_path, xml_US_path)
 
             # Update locations in the XML file
-            self.update_locations_in_xml(xml_file_path, xml_US_path, xml_Cord_path)
+            self.update_coordinates_in_xml(xml_US_path, xml_Cord_path)
 
-            # Update coordinates in the XML file
-            self.update_coordinates_in_xml(xml_file_path, xml_Final)
+            # Update locations in the XML file
+            self.update_locations_in_xml(xml_file_path, xml_Final, xml_Cord_path)
 
             # Validate the generated XML file
             if not self.validate_xml_file(xml_Final, context):
