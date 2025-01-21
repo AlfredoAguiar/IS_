@@ -10,13 +10,9 @@
           <xs:complexType>
             <xs:sequence>
               <xs:element name="VIN" type="xs:string" />
-
               <xs:element name="Condition" type="xs:string" nillable="true" />
-
               <xs:element name="Odometer" type="xs:int" />
-
               <xs:element name="MMR" type="xs:int" />
-
               <xs:element name="Specifications">
                 <xs:complexType>
                   <xs:sequence>
@@ -31,7 +27,6 @@
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
-
               <xs:element name="Seller">
                 <xs:complexType>
                   <xs:sequence>
@@ -42,7 +37,6 @@
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
-
               <xs:element name="Location">
                 <xs:complexType>
                   <xs:sequence>
@@ -58,7 +52,6 @@
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
-
             </xs:sequence>
           </xs:complexType>
         </xs:element>

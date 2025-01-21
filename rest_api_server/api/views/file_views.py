@@ -7,7 +7,7 @@ from api.grpc_ import server_services_pb2 as server_services_pb2
 from api.grpc_ import server_services_pb2_grpc as server_services_pb2_grpc
 import os
 from rest_api_server.settings import GRPC_PORT, GRPC_HOST
-
+import logging
 
 class FileUploadView(APIView):
     def post(self, request):
@@ -360,36 +360,26 @@ class GetCarByVinView(APIView):
         except grpc.RpcError as e:
             return Response({"error": f"gRPC call failed: {e.details()}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 class UpdateCarView(APIView):
     def put(self, request):
         vin = request.data.get("vin")
+
+        # Validate VIN
         if not vin or len(vin) != 17:
             return Response({"error": "VIN must be a 17-character string."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Prepare the data to send to the gRPC service
+        # Prepare the data to send to the gRPC service for updating Seller information
         update_data = server_services_pb2.UpdateCarRequest(
             vin=vin,
-            condition=request.data.get("condition"),
-            odometer=request.data.get("odometer"),
-            color=request.data.get("color", ""),
-            interior=request.data.get("interior", ""),
-            mmr=request.data.get("mmr"),
-            specifications=server_services_pb2.Specifications(
-                year=request.data.get("year"),
-                make=request.data.get("make"),
-                model=request.data.get("model"),
-                trim=request.data.get("trim"),
-                body=request.data.get("body"),
-                transmission=request.data.get("transmission")
-            ),
             seller_name=request.data.get("seller_name"),
             seller_state=request.data.get("seller_state"),
             sale_date=request.data.get("sale_date"),
-            selling_price=request.data.get("selling_price"),
-            city=request.data.get("city"),
-            latitude=request.data.get("latitude"),
-            longitude=request.data.get("longitude")
+            selling_price=request.data.get("selling_price")
         )
+
+        # Log the data being sent to the gRPC service for debugging
+        logging.debug(f"Sending update data to gRPC: {update_data}")
 
         # Connect to the gRPC service
         channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
@@ -399,14 +389,18 @@ class UpdateCarView(APIView):
             # Send the update request to the gRPC service
             response = stub.UpdateCar(update_data)
 
+            # Log the response from the gRPC server
+            logging.debug(f"gRPC Response: {response}")
+
             if response.success:
-                return Response({"message": "Car updated successfully."}, status=status.HTTP_200_OK)
+                return Response({"message": "Seller details updated successfully."}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": response.message}, status=status.HTTP_400_BAD_REQUEST)
 
         except grpc.RpcError as e:
+            # Log the gRPC error details for debugging
+            logging.error(f"gRPC call failed: {e.details()}")
             return Response({"error": f"gRPC call failed: {e.details()}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 class DeleteCarView(APIView):
     def delete(self, request):
         vin = request.data.get("vin")

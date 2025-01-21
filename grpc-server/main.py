@@ -530,85 +530,38 @@ class CarService_db(server_services_pb2_grpc.CarServiceDatabaseServicer):
             # Establish database connection
             conn, cursor = self.establish_db_connection()
 
-            # Update Cars table
-            cursor.execute("""
-                UPDATE Cars SET
-                    Condition = %s,
-                    Odometer = %s,
-                    Color = %s,
-                    Interior = %s,
-                    MMR = %s
-                WHERE VIN = %s
-            """, (
-                request.condition,
-                request.odometer,
-                request.color or "",  # Default to empty string if color is None
-                request.interior or "",  # Default to empty string if interior is None
-                request.mmr,
-                request.vin
-            ))
+            # Update Sellers table (only update fields that are provided)
+            if request.seller_name is not None:
+                cursor.execute("""
+                        UPDATE Sellers SET Name = %s WHERE VIN = %s
+                    """, (request.seller_name, request.vin))
 
-            # Update Specifications table
-            cursor.execute("""
-                UPDATE Specifications SET
-                    Year = %s,
-                    Make = %s,
-                    Model = %s,
-                    Trim = %s,
-                    Body = %s,
-                    Transmission = %s
-                WHERE VIN = %s
-            """, (
-                request.specifications.year,
-                request.specifications.make,
-                request.specifications.model,
-                request.specifications.trim,
-                request.specifications.body,
-                request.specifications.transmission,
-                request.vin
-            ))
+            if request.seller_state is not None:
+                cursor.execute("""
+                        UPDATE Sellers SET State = %s WHERE VIN = %s
+                    """, (request.seller_state, request.vin))
 
-            # Update Sellers table
-            cursor.execute("""
-                UPDATE Sellers SET
-                    Name = %s,
-                    State = %s,
-                    SaleDate = %s,
-                    SellingPrice = %s
-                WHERE VIN = %s
-            """, (
-                request.seller_name,
-                request.seller_state,
-                request.sale_date,
-                request.selling_price,
-                request.vin
-            ))
+            if request.sale_date is not None:
+                cursor.execute("""
+                        UPDATE Sellers SET SaleDate = %s WHERE VIN = %s
+                    """, (request.sale_date, request.vin))
 
-            # Update Locations table
-            cursor.execute("""
-                UPDATE Locations SET
-                    City = %s,
-                    Latitude = %s,
-                    Longitude = %s
-                WHERE VIN = %s
-            """, (
-                request.city,
-                request.latitude,
-                request.longitude,
-                request.vin
-            ))
+            if request.selling_price is not None:
+                cursor.execute("""
+                        UPDATE Sellers SET SellingPrice = %s WHERE VIN = %s
+                    """, (request.selling_price, request.vin))
 
             # Commit the transaction
             conn.commit()
             conn.close()
 
             # Return success response
-            return server_services_pb2.UpdateCarResponse(success=True, message="Car updated successfully.")
+            return server_services_pb2.UpdateCarResponse(success=True, message="Seller details updated successfully.")
 
         except Exception as e:
             # Log the error and return failure response
-            logger.error(f"Error updating car: {str(e)}")
-            context.set_details(f"Error updating car: {str(e)}")
+            logger.error(f"Error updating seller details: {str(e)}")
+            context.set_details(f"Error updating seller details: {str(e)}")
             context.set_code(grpc.StatusCode.INTERNAL)
             return server_services_pb2.UpdateCarResponse(success=False, message=str(e))
     def DeleteCar(self, request, context):

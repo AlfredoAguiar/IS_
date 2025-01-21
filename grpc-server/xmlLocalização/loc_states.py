@@ -47,7 +47,7 @@ class XMLLocationUpdater:
             # Create a mapping of state names to coordinates
             city_coordinates = {}
             for state_element in coordinates_root.findall(".//State"):
-                state_name = state_element.text.strip().upper()  # Normalize to uppercase
+                state_name = state_element.text.strip().upper()
                 coordinates_element = state_element.find("Coordinates")
                 if coordinates_element is not None:
                     try:
@@ -61,7 +61,7 @@ class XMLLocationUpdater:
             for car in cars_root.findall(".//Car"):
                 seller_state_element = car.find(".//Seller/State")
                 if seller_state_element is not None:
-                    state_name = seller_state_element.text.strip().upper()  # Normalize to uppercase
+                    state_name = seller_state_element.text.strip().upper()
                     if state_name in city_coordinates:
                         latitude, longitude = city_coordinates[state_name]
                         self.add_location_to_car(car, state_name, latitude, longitude)

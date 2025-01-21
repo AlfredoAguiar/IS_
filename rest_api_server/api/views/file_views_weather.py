@@ -216,7 +216,6 @@ class GetWeatherByDateRangeView(APIView):
         start_date = request.query_params.get("start_date")
         end_date = request.query_params.get("end_date")
 
-        # Check if both start_date and end_date are provided
         if not start_date or not end_date:
             return Response({"error": "start_date and end_date are required."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -227,28 +226,25 @@ class GetWeatherByDateRangeView(APIView):
         except ValueError:
             return Response({"error": "Invalid date format. Use YYYY-MM-DD."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Connect to the gRPC service
+
         channel = grpc.insecure_channel(f'{GRPC_HOST_2}:{GRPC_PORT_2}')
         stub = server_services_pb2_grpc.WeatherServiceStub(channel)
 
         try:
-            # Send a gRPC request to get weather data within the date range
+
             grpc_request = server_services_pb2.GetWeatherByDateRangeRequest(
-                start_date=start_date,  # Pass the date range
+                start_date=start_date,
                 end_date=end_date
             )
             response = stub.GetWeatherByDateRange(grpc_request)
 
-            # Check if we have weather data in the response
             if not response.weather_data:
                 return Response({"error": "No weather data found for the specified date range."}, status=status.HTTP_404_NOT_FOUND)
 
-            # Handle response to ensure it is iterable (and iterate over repeated fields)
             formatted_weather_data = []
             for data in response.weather_data:
-                # Access the individual fields in each 'data' object (not a container)
                 try:
-                    # Parsing the date from the weather data
+                    
                     date_obj = datetime.strptime(data.date, "%m/%d/%Y")
                     formatted_date = date_obj.strftime("%Y-%m-%d")
                 except ValueError:
