@@ -404,8 +404,7 @@ class UpdateCarView(APIView):
 class DeleteCarView(APIView):
     def delete(self, request):
         vin = request.data.get("vin")
-        if not vin or len(vin) != 17:
-            return Response({"error": "VIN must be a 17-character string."}, status=status.HTTP_400_BAD_REQUEST)
+
 
         # Connect to the gRPC service
         channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
