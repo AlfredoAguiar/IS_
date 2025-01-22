@@ -2,7 +2,7 @@ from django.urls import path
 from .views.file_views import FileUploadView, FileUploadChunksView, GetAllCarsView, GetCarsByMakeModelView, GetCarsByPriceRangeView, GetCarsByYearConditionView
 from .views.file_views_weather import FileUploadView as WeatherFileUploadView
 from .views.file_views_weather import FileUploadChunksView as WeatherFileUploadChunksView
-from .views.file_views import GetCarByVinView, UpdateCarView, DeleteCarView, GetAllCarsView_2
+from .views.file_views import GetCarByVinView, UpdateCarView, DeleteCarView, GetAllCarsView_2, GetAllCarsLView_2, GetCarByVinLView
 from .views.file_views_weather import GetWeatherByLocationView, GetWeatherByDateRangeView, GetWeatherByRegionView
 
 urlpatterns = [
@@ -26,7 +26,9 @@ urlpatterns = [
     path('weather/upload-file/by-chunks', WeatherFileUploadChunksView.as_view(), name='weather_upload_file_by_chunks'),
 
     path('cars/all_2/', GetAllCarsView_2.as_view(), name='get_all_cars_2'),
+    path('cars/all_L2/', GetAllCarsLView_2.as_view(), name='get_all_cars_2'),
     path('cars/get-car-by-vin/', GetCarByVinView.as_view(), name='get-car-by-vin'),
+    path('cars/get-car-by-vinL/', GetCarByVinLView.as_view(), name='get-car-by-vin'),
     path('cars/update-car/', UpdateCarView.as_view(), name='update-car'),
     path('cars/delete-car/', DeleteCarView.as_view(), name='delete-car'),
 

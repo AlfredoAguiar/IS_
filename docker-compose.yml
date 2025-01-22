@@ -114,12 +114,12 @@ services:
       interval: 10s
       retries: 5
 
-  frontend:
-    build:
-      context: ./frontend
-    container_name: frontend
-    ports:
-     - "3000:3000"
+#  frontend:
+#    build:
+#      context: ./frontend
+#    container_name: frontend
+#    ports:
+ #    - "3000:3000"
 
 
 # Volumes for persistent storage

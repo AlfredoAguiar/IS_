@@ -11,51 +11,42 @@ import logging
 
 class FileUploadView(APIView):
     def post(self, request):
-        # Valida os dados do request usando o serializer
         serializer = FileUploadSerializer(data=request.data)
-        
-        # Se os dados forem válidos, pega o arquivo
+
         if serializer.is_valid():
             file = serializer.validated_data['file']
-        
-            # Verifica se o arquivo foi enviado
+
             if not file:
                 return Response({"error": "No file uploaded"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Obtém o nome e a extensão do arquivo
+            o
             file_name, file_extension = os.path.splitext(file.name)
-            
-            # Lê o conteúdo do arquivo
+
             file_content = file.read()
-            
-            # Conecta ao serviço gRPC
+
             channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
             stub = server_services_pb2_grpc.SendFileServiceStub(channel)
-            
-            # Prepara a requisição gRPC
+
             grpc_request = server_services_pb2.SendFileRequestBody(
                 file_name=file_name,
                 file_mime=file_extension,
                 file=file_content
             )
-            
-            # Envia os dados do arquivo ao serviço gRPC
+
             try:
-                stub.SendFile(grpc_request)  # Envia a requisição sem atribuí-la a `response`
-                
-                # Retorna a resposta de sucesso
+                stub.SendFile(grpc_request)
+
                 return Response({
                     "file_name": file_name,
                     "file_extension": file_extension
                 }, status=status.HTTP_201_CREATED)
             
             except grpc.RpcError as e:
-                # Se a chamada gRPC falhar, retorna o erro
+
                 return Response({
                     "error": f"gRPC call failed: {e.details()}"
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        # Se o serializer não for válido, retorna os erros do serializer
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class FileUploadChunksView(APIView):
@@ -71,7 +62,6 @@ class FileUploadChunksView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Conectar ao serviço gRPC
             channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
             stub = server_services_pb2_grpc.SendFileServiceStub(channel)
 
@@ -463,3 +453,80 @@ class GetAllCarsView_2(APIView):
 
             return Response({"error": f"gRPC call failed: {e.details()}"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetAllCarsLView_2(APIView):
+    def get(self, request):
+        channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+        stub = server_services_pb2_grpc.CarServiceDatabaseStub(channel)
+
+        try:
+            # Make the gRPC call
+            response = stub.GetAllCars(server_services_pb2.GetAllCarsRequest())
+
+            # Build the cities list and ensure unique keys
+            cities = []
+            for car in response.cars:
+                city_data = {
+                    "nome": car.seller_state,
+                    "latitude": car.seller_coordinates.latitude,
+                    "longitude": car.seller_coordinates.longitude,
+                    "id": car.vin,
+                }
+
+                # Avoid adding duplicates
+                if not any(existing["id"] == city_data["id"] for existing in cities):
+                    cities.append(city_data)
+
+            # Return sanitized response
+            return Response({"cities": cities}, status=status.HTTP_200_OK)
+
+        except grpc.RpcError as e:
+            return Response(
+                {"error": f"gRPC call failed: {e.details()}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class GetCarByVinLView(APIView):
+    def put(self, request):
+        vin = request.data.get("id")
+        seller_state = request.data.get("name")  # Correctly assign seller_state
+        latitude = request.data.get("latitude")
+        longitude = request.data.get("longitude")
+
+        # Validate VIN
+        if not vin or len(vin) != 17:
+            return Response({"error": "VIN must be a 17-character string."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate required fields
+        if not seller_state or latitude is None or longitude is None:
+            return Response({"error": "All fields (name, latitude, longitude) are required."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Construct the gRPC update request
+            update_data = server_services_pb2.UpdateCarRequest(
+                vin=vin,
+                seller_state=seller_state,
+                latitude=latitude,
+                longitude=longitude
+            )
+
+
+            logging.debug(f"Sending update data to gRPC: {update_data}")
+
+            channel = grpc.insecure_channel(f'{GRPC_HOST}:{GRPC_PORT}')
+            stub = server_services_pb2_grpc.CarServiceDatabaseStub(channel)
+
+            response = stub.UpdateCar(update_data)
+
+            logging.debug(f"gRPC Response: {response}")
+
+            if response.success:
+                return Response({"message": "Seller details updated successfully."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": response.message}, status=status.HTTP_400_BAD_REQUEST)
+
+        except grpc.RpcError as e:
+
+            logging.error(f"gRPC call failed: {e.details()}")
+            return Response({"error": f"gRPC call failed: {e.details()}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
