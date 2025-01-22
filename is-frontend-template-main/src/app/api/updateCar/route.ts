@@ -54,7 +54,7 @@ export async function PUT(req: NextRequest) {
     if (!response.ok) {
       const errorData = await response.json();
       return NextResponse.json({
-        error: errorData.error || 'Failed to update the car.',
+        error:  'Failed to update the car.',
       });
     }
 

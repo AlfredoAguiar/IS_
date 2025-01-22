@@ -68,7 +68,7 @@ const UpdateCarDialog = forwardRef((props, ref) => {
       }
     } catch (error) {
       console.error("Error submitting car details:", error);
-      toast.error(error.response?.data?.error || "An error occurred while updating the car.");
+      toast.error( "An error occurred while updating the car.");
     } finally {
       setLoading(false);
     }

@@ -49,7 +49,7 @@ export async function PUT(req: NextRequest) {
     } catch (error) {
         console.error("Fetch error:", error);
         return NextResponse.json(
-            { status: 500, message: "Internal Server Error", error: error.message },
+            { status: 500, message: "Internal Server Error" },
 
         );
     }
