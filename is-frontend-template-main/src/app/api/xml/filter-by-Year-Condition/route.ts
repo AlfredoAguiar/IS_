@@ -27,13 +27,13 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        // Get the base URL from environment variables
+
         const baseUrl = process.env.REST_API_BASE_URL;
         if (!baseUrl) {
             throw new Error('REST_API_BASE_URL environment variable is not set');
         }
 
-        // Construct the URL for the external API call
+
         const url = `${baseUrl}/api/cars/year-condition/?year=${yearNumber}&condition=${conditionNumber}`;
 
         // Fetch data from the external API
