@@ -1,7 +1,7 @@
-Drop table Specifications;
-Drop table Sellers;
-Drop table Locations;
-Drop table Cars;
+DROP TABLE IF EXISTS Specifications;
+DROP TABLE IF EXISTS Sellers;
+DROP TABLE IF EXISTS Locations;
+DROP TABLE IF EXISTS Cars;
 
 CREATE TABLE IF NOT EXISTS Cars (
     VIN VARCHAR(17) PRIMARY KEY,
