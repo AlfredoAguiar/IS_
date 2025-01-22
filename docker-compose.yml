@@ -26,7 +26,30 @@ services:
       - db
     networks:
       - app-network
-
+  grpc-server-2:
+    build: grpc-server-2
+    container_name: grpc-server-2
+    ports:
+      - "50053:50053"
+    volumes:
+      - grpc-server-2:/app/media
+    environment:
+      - GRPC_SERVER_PORT=50053
+      - MAX_WORKERS=10
+      - MEDIA_PATH=/app/media
+      - DBNAME=mydatabase
+      - DBUSERNAME=myuser
+      - DBPASSWORD=mypassword
+      - DBHOST=db
+      - DBPORT=5432
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=user
+      - RABBITMQ_PW=password
+    depends_on:
+      - db
+    networks:
+      - app-network
   # REST API Server
   rest-api-server:
     build: rest_api_server
@@ -125,6 +148,7 @@ services:
 # Volumes for persistent storage
 volumes:
   grpc-server:
+  grpc-server-2:
   pgdata:
 
 # Networks definition for better isolation
